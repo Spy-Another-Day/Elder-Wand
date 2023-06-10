@@ -70,11 +70,9 @@ app.get('/', (req, res) => {
   res.json('Welcome to Blue Ocean! 🤗');
 });
 
-app.get('/user/:username', (req, res)=> {
-  usersRoutes.getUser(req, res)
-})
+app.get('/user/:username', (req, res)=> {usersRoutes.getUser(req, res)})
 
-app.post('/User', (req, res)=> {usersRoutes.postUser(req, res)})
+app.post('/user', (req, res)=> {usersRoutes.postUser(req, res)})
 
 app.patch('/nickname', (req, res)=> {usersRoutes.patchNickname(req, res)})
 

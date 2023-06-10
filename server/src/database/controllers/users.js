@@ -12,19 +12,23 @@ module.exports = {
       if (result === null) {
         res.status(204).send('no user found')
       } else {
-        res.status(200).send(result[0])
+        res.status(200).send(result)
       }
     })
     .catch(err => console.log(err))
   },
   postUser: (req, res) => {
     const {username, nickname, email, password, salt} = req.body;
+    console.log(req.body)
     if (username === undefined || nickname === undefined|| password ===undefined) {
+
       res.status(205).send('username, nickname, or password needs to be determined')
     } else {
-      Users.findOne(username)
+
+      Users.findOne({username:username})
       .then((result) => {
-        if (result === null) {
+        if (result !== null) {
+
           res.status(205).send('user already exist')
         } else {
           Users.create(req.body)
@@ -63,7 +67,7 @@ module.exports = {
   patchPassword: (req, res)=>{
     const {username, password} = req.body;
     let filter = {username: username};
-    let update = {password: nickname};
+    let update = {password: password};
 
     Users.findOne(filter)
     .then(result => {

@@ -23,7 +23,7 @@ module.exports = {
     Words.find(lookup)
     .then(result=> {
 
-      res.status(200).send(result)
+      res.status(200).send(result[0])
     })
     .catch(err => console.log(err))
   },
@@ -55,14 +55,14 @@ module.exports = {
         }else {
           Words.findOneAndUpdate(filter, update)
           .then(result => {
-            res.status(200).send('words added')
+            res.status(201).send('words added')
           })
           .catch(err => console.log(err))
         }
       })
       .catch(err => console.log(err))
 
-      .findOneAndUpdate(filter, update)
+
     }
   }
 
