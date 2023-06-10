@@ -51,7 +51,7 @@ export const daisyui = {
     "dracula",
     "aqua",
     "cyberpunk",
-    'buisnses',
+    'business',
     "coffee"
   ]
 };
