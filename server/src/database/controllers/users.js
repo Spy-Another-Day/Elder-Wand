@@ -12,7 +12,7 @@ module.exports = {
       if (result === null) {
         res.status(204).send('no user found')
       } else {
-        res.staus(200).send(result[0])
+        res.status(200).send(result[0])
       }
     })
     .catch(err => console.log(err))

@@ -4,9 +4,16 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const http = require('http');
 const { Server, Socket } = require('socket.io');
+const usersRoutes = require('./database/controllers/users.js');
+const wordsRoutes = require('./database/controllers/words.js');
+
+
 
 const app = express();
 const server = http.createServer(app);
+
+
+
 
 const io = new Server(server, { cors: { origin: '*' } });
 
@@ -63,9 +70,27 @@ app.get('/', (req, res) => {
   res.json('Welcome to Blue Ocean! 🤗');
 });
 
+app.get('/user/:username', (req, res)=> {
+  usersRoutes.getUser(req, res)
+})
+
+app.post('/User', (req, res)=> {usersRoutes.postUser(req, res)})
+
+app.patch('/nickname', (req, res)=> {usersRoutes.patchNickname(req, res)})
+
+app.patch('/password', (req, res)=> {usersRoutes.patchPassword(req, res)})
+
+app.get('/topics', (req, res)=> {wordsRoutes.getTopics(req, res)})
+
+app.get('/allTopicWords', (req, res)=> {wordsRoutes.getAllTopicWords(req, res)})
+
+app.get('/words/:topic', (req, res)=> {wordsRoutes.getWords(req, res)})
+
+app.post('/newTopic', (req, res)=> {wordsRoutes.postNewTopic(req, res)})
+
+app.patch('/addNewWords', (req, res)=> {wordsRoutes.patchAddNewWords(req, res)})
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => console.log(`Now running on http://localhost:${PORT}`));
 
-
-module.exports = app;

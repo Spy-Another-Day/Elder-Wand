@@ -6,14 +6,14 @@ module.exports = {
   getTopics: (req, res)=> {
     Words.find().select('topic')
     .then(result=> {
-      res.(200).send(result)
+      res.status(200).send(result)
     })
     .catch(err => console.log(err))
   },
   getAllTopicWords: (req, res)=> {
     Words.find()
     .then(result=> {
-      res.(200).send(result)
+      res.status(200).send(result)
     })
     .catch(err => console.log(err))
   },
@@ -23,7 +23,7 @@ module.exports = {
     Words.find(lookup)
     .then(result=> {
 
-      res.(200).send(result)
+      res.status(200).send(result)
     })
     .catch(err => console.log(err))
   },
