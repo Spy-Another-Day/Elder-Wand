@@ -164,18 +164,29 @@
 #### Response:
 ```
 {
-    "_id": "6484cc729fdb0cbcd02d9d93",
     "topic": "Technology",
+    "startUpTeam": "1",
     "words": [
-        "Algorithm",
-        "Analytics",
-        "API",
-        "Artificial Intelligence",
-        "Automation",
-        "Big Data",
+        [
+            {
+                "word": "Data Science",
+                "belongsTo": "bystander",
+                "isTouched": false
+            },
+            {
+                "word": "Firmware",
+                "belongsTo": "bystander",
+                "isTouched": false
+            },
+            {
+                "word": "Network",
+                "belongsTo": "0",
+                "isTouched": false
+            },
+            ...
+        ],
         ...
-    ],
-    "__v": 0
+    ]
 }
 
 ```
