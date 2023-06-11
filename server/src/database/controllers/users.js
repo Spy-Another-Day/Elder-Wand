@@ -10,7 +10,7 @@ module.exports = {
     Users.findOne(username)
     .then((result) => {
       if (result === null) {
-        res.status(204).send('no user found')
+        res.status(204).send('204 no user found')
       } else {
         res.status(200).send(result)
       }
@@ -19,22 +19,28 @@ module.exports = {
   },
   postUser: (req, res) => {
     const {username, nickname, email, password, salt} = req.body;
-    console.log(req.body)
+    const data = {
+      username:username,
+      nickname: nickname,
+      email: email,
+      password: password,
+      salt:salt
+    }
     if (username === undefined || nickname === undefined|| password ===undefined) {
 
-      res.status(205).send('username, nickname, or password needs to be determined')
+      res.status(205).send('205 username, nickname, or password needs to be determined')
     } else {
 
       Users.findOne({username:username})
       .then((result) => {
         if (result !== null) {
 
-          res.status(205).send('user already exist')
+          res.status(205).send('205 user already exist')
         } else {
-          Users.create(req.body)
+          Users.create(data)
           .then((result) => {
 
-            res.status(201).send('user created')
+            res.status(201).send('201 user created')
           })
           .catch(err => console.log(err))
 
@@ -52,11 +58,11 @@ module.exports = {
     Users.findOne(filter)
     .then(result => {
       if(result === null) {
-        res.status(204).send('user not found')
+        res.status(204).send('204 user not found')
       }else {
         Users.findOneAndUpdate(filter, update)
         .then(result => {
-          res.status(200).send('nickname updated')
+          res.status(200).send('200 nickname updated')
         })
         .catch(err => console.log(err))
       }
@@ -76,7 +82,7 @@ module.exports = {
       }else {
         Users.findOneAndUpdate(filter, update)
         .then(result => {
-          res.status(200).send('password updated')
+          res.status(200).send('200 password updated')
         })
         .catch(err => console.log(err))
       }

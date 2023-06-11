@@ -6,7 +6,7 @@ const http = require('http');
 const { Server, Socket } = require('socket.io');
 const usersRoutes = require('./database/controllers/users.js');
 const wordsRoutes = require('./database/controllers/words.js');
-
+const groupsRoutes = require('./database/controllers/groups.js');
 
 
 const app = express();
@@ -84,9 +84,26 @@ app.get('/allTopicWords', (req, res)=> {wordsRoutes.getAllTopicWords(req, res)})
 
 app.get('/words/:topic', (req, res)=> {wordsRoutes.getWords(req, res)})
 
+app.get('/initGame/:topic', (req, res) => {wordsRoutes.getInitGame(req, res)})
+
 app.post('/newTopic', (req, res)=> {wordsRoutes.postNewTopic(req, res)})
 
-app.patch('/addNewWords', (req, res)=> {wordsRoutes.patchAddNewWords(req, res)})
+app.put('/addNewWords', (req, res)=> {wordsRoutes.patchAddNewWords(req, res)})
+
+app.get('/groups', (req, res)=> {groupsRoutes.getGroups(req, res)})
+
+app.get('/group/:groupName', (req, res)=> {groupsRoutes.getGroup(req, res)})
+
+app.post('/group', (req, res)=> {groupsRoutes.postGroup(req, res)})
+
+app.put('/groupMember', (req, res)=> {groupsRoutes.putGroupMember(req, res)})
+
+app.delete('/groupMember', (req, res)=> {groupsRoutes.deleteGroupMember(req, res)})
+
+app.patch('/groupName', (req, res)=> {groupsRoutes.patchGroupName(req, res)})
+
+app.delete('/group/:groupName', (req, res)=> {groupsRoutes.deleteGroup(req, res)})
+
 
 const PORT = process.env.PORT || 3000;
 
