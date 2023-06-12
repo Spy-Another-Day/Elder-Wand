@@ -7,7 +7,9 @@ const { Server, Socket } = require('socket.io');
 const usersRoutes = require('./database/controllers/users.js');
 const wordsRoutes = require('./database/controllers/words.js');
 const groupsRoutes = require('./database/controllers/groups.js');
-
+const redis = require('redis');
+const redisClient = redis.createClient(6379);
+redisClient.connect();
 
 const app = express();
 const server = http.createServer(app);
@@ -28,7 +30,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 
 dotenv.config();
-
+var gameState = {};
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
 
@@ -37,7 +39,21 @@ io.on('connection', (socket) => {
     socket.join(data.roomID)
   })
   socket.on('initialGameState', data => {
-    io.to(data.roomID).emit('gameState', data)
+
+    redisClient.get(data.roomID)
+    .then(result => {
+
+      if(result !== null) {
+        io.to(data.roomID).emit('gameState', JSON.parse(result))
+      }else{
+
+        redisClient.set(data.roomID, JSON.stringify(data))
+        io.to(data.roomID).emit('gameState', data)
+      }
+    })
+
+
+
   })
 
   socket.on('disconnect', data => {

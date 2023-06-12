@@ -167,14 +167,15 @@
     "topic": "Technology",
     "team_1_guessed": 0,
     "team_2_guessed": 0,
-    "team_1_guess_goal": 9,
-    "team_2_guess_goal": 8,
+    "team_1_guess_goal": 8,
+    "team_2_guess_goal": 9,
     "team_1_members": [],
     "team_2_members": [],
     "team_1_spymaster": "",
     "team_2_spymaster": "",
-    "startUpTeam": "team_1",
-    "currentTeam": "team_1",
+    "players": {},
+    "startUpTeam": "team_2",
+    "currentTeam": "team_2",
     "words": [
         [
             {
