@@ -165,6 +165,10 @@
 ```
 {
     "topic": "Technology",
+    "team_1_guessed": 0,
+    "team_2_guessed": 0,
+    "team_1_guess_goal": 8,
+    "team_2_guess_goal": 9,
     "startUpTeam": "1",
     "currentTeam": "1",
     "words": [

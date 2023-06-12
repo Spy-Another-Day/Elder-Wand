@@ -33,6 +33,16 @@ io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
 
   io.emit('test123', 'hello')
+  socket.on('initialGameState', data => {
+    //remember to sent datat to room not just individual clients
+    //io.to(data.roomId).emit('gameState', data)...
+
+    io.emit('gameState', data)
+  })
+
+  socket.on('disconnect', data => {
+    console.log(socket.id, 'left')
+  })
 
   // const users = [];
   // for (const [id, connectedSocket] of io.of('/').sockets) {
