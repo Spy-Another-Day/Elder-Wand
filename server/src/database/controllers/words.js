@@ -138,12 +138,16 @@ module.exports = {
           temp.belongsTo = team_1;
           data.startUpTeam = team_1;
           data.currentTeam = team_1;
+
           data.team_1_guess_goal++;
+
         } else{
           temp.belongsTo = team_2;
           data.startUpTeam = team_2;
           data.currentTeam = team_2;
+
           data.team_2_guess_goal++;
+
         }
         deck.push(temp);
 
