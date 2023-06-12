@@ -7,13 +7,13 @@ import EntryPage from './Pages/EntryPage'
 import RoomPage from './Pages/RoomPage'
 import IconHome from './assets/IconHome'
 
-const themes = ['dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'buisness', 'Stigander', 'Zaris']
+const themes = ['dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
 function App() {
 
 
   const socket = useContext(SocketContext);
-
-  const [theme, setTheme] = useState('dark')
+  console.log(socket)
+  const [theme, setTheme] = useState('business')
 
   socket.on('test123', (msg) => {
     console.log(msg)
