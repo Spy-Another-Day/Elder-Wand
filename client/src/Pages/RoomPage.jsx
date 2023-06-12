@@ -1,8 +1,14 @@
-import react, {useEffect, useState, userRef} from 'react';
+import react, {useEffect, useState, userRef, useContext} from 'react';
 import Gameboard from '../Components/Gameboard/Gameboard.jsx'
+import { SocketContext } from '../socket.js';
+import { useParams } from 'react-router-dom'
 const RoomPage = () => {
+  const socket = useContext(SocketContext);
 
   const [inGame, setInGame] = useState(true);
+  const params = useParams();
+
+  socket.emit('roomID',params )
 
   if(inGame) {
     return (

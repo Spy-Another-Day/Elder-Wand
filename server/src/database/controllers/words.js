@@ -65,8 +65,8 @@ module.exports = {
       data.team_2_members = [];
       data.team_1_spymaster = '';
       data.team_2_spymaster = '';
-
-      var deck = []
+      data.players = {};
+      var deck = [];
       var team_1 = 'team_1';
       var team_2 = 'team_2';
 
