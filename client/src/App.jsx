@@ -24,19 +24,38 @@ function App() {
     socket.connect();
   };
 
+  socket.on("session", );
+
   useEffect(() => {
+    const sessionID = localStorage.getItem("sessionID");
+
+    if (sessionID) {
+      this.usernameAlreadySelected = true;
+      socket.auth = { sessionID };
+      socket.connect();
+    }
+
     const handleConnectError = (err) => {
       if (err.message === "invalid username") {
         setUsernameAlreadySelected(false);
       }
     };
+    const handleSession = ({ sessionID, userID }) => {
+      // attach the session ID to the next reconnection attempts
+      socket.auth = { sessionID };
+      // store it in the localStorage
+      localStorage.setItem("sessionID", sessionID);
+      // save the ID of the user
+      socket.userID = userID;
+    }
 
     socket.on("connect_error", handleConnectError);
-
+    socket.on("session", handleSession)
     return () => {
       socket.off("connect_error", handleConnectError);
+      socket.off("session", handleSession)
     };
-  }, []);
+  }, [socket]);
 
   socket.on('test123', (msg) => {
     console.log(msg)
@@ -56,10 +75,10 @@ function App() {
         </div>
 
         {!usernameAlreadySelected ? (
-        <SelectUsername onInput={onUsernameSelection} />
-      ) : (
-        <Chat />
-      )}
+          <SelectUsername onInput={onUsernameSelection} />
+        ) : (
+          <Chat />
+        )}
       </div>
     </SocketContext.Provider>
 

@@ -67,22 +67,31 @@ const Chat = () => {
       );
     };
 
-    const handleUsers = (receivedUsers) => {
-      const updatedUsers = receivedUsers.map((user) => {
-        const updatedUser = {
-          ...user,
-          self: user.userID === socket.id,
-        };
-        initReactiveProperties(updatedUser);
-        return updatedUser;
+    const handleUsers = socket.on("users", (users) => {
+      users.forEach((user) => {
+        user.messages.forEach((message) => {
+          message.fromSelf = message.from === socket.userID;
+        });
+        for (let i = 0; i < this.users.length; i++) {
+          const existingUser = this.users[i];
+          if (existingUser.userID === user.userID) {
+            existingUser.connected = user.connected;
+            existingUser.messages = user.messages;
+            return;
+          }
+        }
+        user.self = user.userID === socket.userID;
+        initReactiveProperties(user);
+        this.users.push(user);
       });
-      setUsers(updatedUsers.sort((a, b) => {
+      // put the current user first, and sort by username
+      this.users.sort((a, b) => {
         if (a.self) return -1;
         if (b.self) return 1;
         if (a.username < b.username) return -1;
         return a.username > b.username ? 1 : 0;
-      }));
-    };
+      });
+    });
 
     const handleUserConnected = (user) => {
       initReactiveProperties(user);
