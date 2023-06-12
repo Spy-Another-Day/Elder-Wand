@@ -110,6 +110,7 @@ module.exports = {
           deck.push(temp);
 
           words.splice(randomIndex, 1);
+
         }
 
         //assassin
@@ -122,6 +123,7 @@ module.exports = {
           temp.belongsTo = 'assassin';
           temp.isTouched = false;
           deck.push(temp);
+          words.splice(randomIndex, 1);
         }
         //start up team
         randomIndex = Math.floor(Math.random() * words.length);
@@ -132,9 +134,11 @@ module.exports = {
         if (Math.random() >.50) {
           temp.belongsTo = team_1;
           data.startUpTeam = team_1;
+          data.currentTeam = team_1;
         } else{
           temp.belongsTo = team_2;
           data.startUpTeam = team_2;
+          data.currentTeam = team_2;
         }
         deck.push(temp);
 

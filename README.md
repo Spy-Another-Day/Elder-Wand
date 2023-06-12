@@ -166,6 +166,7 @@
 {
     "topic": "Technology",
     "startUpTeam": "1",
+    "currentTeam": "1",
     "words": [
         [
             {
