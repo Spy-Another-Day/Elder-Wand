@@ -3,7 +3,7 @@ export const content = ['./src/**/*.{js,ts,jsx,tsx}'];
 export const plugins = [require("daisyui")];
 export const daisyui = {
   themes: [
-    "dark",
+    'business',
     {
       Stigander: {
         // green
@@ -51,7 +51,7 @@ export const daisyui = {
     "dracula",
     "aqua",
     "cyberpunk",
-    'buisnses',
+    "dark",
     "coffee"
   ]
 };
