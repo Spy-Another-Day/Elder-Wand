@@ -57,7 +57,10 @@ module.exports = {
       var data = {};
 
       data.topic = topic;
-
+      data.team_1_guessed = 0;
+      data.team_2_guessed = 0;
+      data.team_1_guess_goal = numberOfAgents;
+      data.team_2_guess_goal = numberOfAgents;
       var deck = []
       var team_1 = '0';
       var team_2 = '1';
@@ -135,10 +138,12 @@ module.exports = {
           temp.belongsTo = team_1;
           data.startUpTeam = team_1;
           data.currentTeam = team_1;
+          data.team_1_guess_goal++;
         } else{
           temp.belongsTo = team_2;
           data.startUpTeam = team_2;
           data.currentTeam = team_2;
+          data.team_2_guess_goal++;
         }
         deck.push(temp);
 
@@ -168,7 +173,7 @@ module.exports = {
         if(tempArray.length !== 0) {
           a.push(tempArray);
         }
-        data.words = a
+        data.words = a;
         res.status(200).send(data)
       })
       .catch(err => console.log(err))

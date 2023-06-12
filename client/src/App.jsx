@@ -12,7 +12,7 @@ function App() {
 
 
   const socket = useContext(SocketContext);
-  console.log(socket)
+  // console.log(socket)
   const [theme, setTheme] = useState('business')
 
   socket.on('test123', (msg) => {
