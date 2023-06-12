@@ -61,9 +61,14 @@ module.exports = {
       data.team_2_guessed = 0;
       data.team_1_guess_goal = numberOfAgents;
       data.team_2_guess_goal = numberOfAgents;
+      data.team_1_members = [];
+      data.team_2_members = [];
+      data.team_1_spymaster = '';
+      data.team_2_spymaster = '';
+
       var deck = []
-      var team_1 = '0';
-      var team_2 = '1';
+      var team_1 = 'team_1';
+      var team_2 = 'team_2';
 
       const numberOfBystanders = numberOfCards - (numberOfAssassins + (numberOfAgents * 2) + 1);
 
