@@ -7,7 +7,6 @@ export default function Game(){
   const [gameState, setGameState] = useState({});
   const [cards, setCards] = useState([]);
   socket.on('gameState', data => {
-
     setGameState(data)
     setCards(data.words)
   })
