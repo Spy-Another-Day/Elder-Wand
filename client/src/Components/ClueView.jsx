@@ -2,11 +2,21 @@ import {useState, useContext, useEffect} from 'react';
 import ClueInput from '../ClueInput.jsx';
 
 // editor should be true when isSpyMaster and teamTurn matches own team
-const ClueView = ({ teamTurn, editor = false }) => {
+const ClueView = ({ shareClue, activeTeam, passTurn, editor = false }) => {
   const [editing, setEditing] = useState(editor);
   const [clue, setClue] = useState('waiting for clue...');
   const [clueNumber, setClueNumber] = useState('');
   const socket = useContext(SocketProvider);
+
+  // This gets called within the ClueInput component
+  const submitClue = (clueToShare, clueNumberToShare) => {
+    // emit clue
+    shareClue(clueToShare, clueNumberToShare);
+    // setEditing to false
+    setEditing(!editing);
+    // setActiveTeam to the other team
+    passTurn();
+  }
 
   useEffect(() => {
     // listen for latest clue...
@@ -20,6 +30,6 @@ const ClueView = ({ teamTurn, editor = false }) => {
       <div className='number'>{ clueNumber }</div>
     </div>
     :
-    <ClueInput />
+    <ClueInput submitClue={submitClue}/>
   }
 }
