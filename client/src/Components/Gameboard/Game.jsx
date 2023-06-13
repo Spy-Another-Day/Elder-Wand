@@ -13,6 +13,9 @@ export default function Game(){
     setCards(data.words)
   })
 
+
+  // socket.emit('gameState', gameState)
+
   if(cards.length === 0) {
     return (<progress></progress>)
   }

@@ -1,23 +1,20 @@
-const express = require('express');
-const logger = require('morgan');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const http = require('http');
-const { Server, Socket } = require('socket.io');
-const usersRoutes = require('./database/controllers/users.js');
-const wordsRoutes = require('./database/controllers/words.js');
-const groupsRoutes = require('./database/controllers/groups.js');
-const redis = require('redis');
+const express = require("express");
+const logger = require("morgan");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const http = require("http");
+const { Server, Socket } = require("socket.io");
+const usersRoutes = require("./database/controllers/users.js");
+const wordsRoutes = require("./database/controllers/words.js");
+const groupsRoutes = require("./database/controllers/groups.js");
+const redis = require("redis");
 const redisClient = redis.createClient(6379);
 redisClient.connect();
 
 const app = express();
 const server = http.createServer(app);
 
-
-
-
-const io = new Server(server, { cors: { origin: '*' } });
+const io = new Server(server, { cors: { origin: "*" } });
 
 // io.use((socket, next) => {
 //   const username = socket.handshake.auth.username;
@@ -28,37 +25,52 @@ const io = new Server(server, { cors: { origin: '*' } });
 //   next();
 // });
 
-
 dotenv.config();
-var gameState = {};
-io.on('connection', (socket) => {
+
+io.on("connection", (socket) => {
   console.log(`${socket.id} connected`);
 
-  socket.on('roomID', data => {
+  socket.on("roomID", (data) => {
+    socket.join(data.roomID);
+  });
 
-    socket.join(data.roomID)
-  })
-  socket.on('initialGameState', data => {
+  // socket.on('initialGameState', data => {
 
-    redisClient.get(data.roomID)
-    .then(result => {
+  //   redisClient.get(data.roomID)
+  //   .then(result => {
 
-      if(result !== null) {
-        io.to(data.roomID).emit('gameState', JSON.parse(result))
-      }else{
+  //     if(result !== null) {
+  //       io.to(data.roomID).emit('gameState', JSON.parse(result))
+  //     }else{
 
-        redisClient.set(data.roomID, JSON.stringify(data))
-        io.to(data.roomID).emit('gameState', data)
+  //       redisClient.set(data.roomID, JSON.stringify(data))
+
+  //       io.to(data.roomID).emit('gameState', data)
+  //     }
+  //   })
+
+  // })
+
+  socket.on("roomExist", (data) => {
+    redisClient.get(data.roomID).then((result) => {
+      console.log(result);
+      if (result === null) {
+        wordsRoutes
+          .initGameState(data)
+          .then((gameState) => {
+            redisClient.set(data.roomID, JSON.stringify(gameState));
+            io.to(data.roomID).emit("gameState", gameState);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        io.to(data.roomID).emit("gameState", JSON.parse(result));
       }
-    })
+    });
+  });
 
-
-
-  })
-
-  socket.on('disconnect', data => {
-    console.log(socket.id, 'left')
-  })
+  socket.on("disconnect", (data) => {
+    console.log(socket.id, "left");
+  });
 
   // const users = [];
   // for (const [id, connectedSocket] of io.of('/').sockets) {
@@ -90,48 +102,82 @@ io.on('connection', (socket) => {
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(logger(':method :url :status - :response-time ms'));
+app.use(logger(":method :url :status - :response-time ms"));
 
-app.get('/', (req, res) => {
-  res.json('Welcome to Blue Ocean! 🤗');
+app.get("/", (req, res) => {
+  res.json("Welcome to Blue Ocean! 🤗");
 });
 
-app.get('/user/:username', (req, res)=> {usersRoutes.getUser(req, res)})
+app.get("/user/:username", (req, res) => {
+  usersRoutes.getUser(req, res);
+});
 
-app.post('/user', (req, res)=> {usersRoutes.postUser(req, res)})
+app.post("/user", (req, res) => {
+  usersRoutes.postUser(req, res);
+});
 
-app.patch('/nickname', (req, res)=> {usersRoutes.patchNickname(req, res)})
+app.patch("/nickname", (req, res) => {
+  usersRoutes.patchNickname(req, res);
+});
 
-app.patch('/password', (req, res)=> {usersRoutes.patchPassword(req, res)})
+app.patch("/password", (req, res) => {
+  usersRoutes.patchPassword(req, res);
+});
 
-app.get('/topics', (req, res)=> {wordsRoutes.getTopics(req, res)})
+app.get("/topics", (req, res) => {
+  wordsRoutes.getTopics(req, res);
+});
 
-app.get('/allTopicWords', (req, res)=> {wordsRoutes.getAllTopicWords(req, res)})
+app.get("/allTopicWords", (req, res) => {
+  wordsRoutes.getAllTopicWords(req, res);
+});
 
-app.get('/words/:topic', (req, res)=> {wordsRoutes.getWords(req, res)})
+app.get("/words/:topic", (req, res) => {
+  wordsRoutes.getWords(req, res);
+});
 
-app.get('/initGame/:topic', (req, res) => {wordsRoutes.getInitGame(req, res)})
+app.get("/initGame/:topic", (req, res) => {
+  wordsRoutes.getInitGame(req, res);
+});
 
-app.post('/newTopic', (req, res)=> {wordsRoutes.postNewTopic(req, res)})
+app.post("/newTopic", (req, res) => {
+  wordsRoutes.postNewTopic(req, res);
+});
 
-app.put('/addNewWords', (req, res)=> {wordsRoutes.patchAddNewWords(req, res)})
+app.put("/addNewWords", (req, res) => {
+  wordsRoutes.patchAddNewWords(req, res);
+});
 
-app.get('/groups', (req, res)=> {groupsRoutes.getGroups(req, res)})
+app.get("/groups", (req, res) => {
+  groupsRoutes.getGroups(req, res);
+});
 
-app.get('/group/:groupName', (req, res)=> {groupsRoutes.getGroup(req, res)})
+app.get("/group/:groupName", (req, res) => {
+  groupsRoutes.getGroup(req, res);
+});
 
-app.post('/group', (req, res)=> {groupsRoutes.postGroup(req, res)})
+app.post("/group", (req, res) => {
+  groupsRoutes.postGroup(req, res);
+});
 
-app.put('/groupMember', (req, res)=> {groupsRoutes.putGroupMember(req, res)})
+app.put("/groupMember", (req, res) => {
+  groupsRoutes.putGroupMember(req, res);
+});
 
-app.delete('/groupMember', (req, res)=> {groupsRoutes.deleteGroupMember(req, res)})
+app.delete("/groupMember", (req, res) => {
+  groupsRoutes.deleteGroupMember(req, res);
+});
 
-app.patch('/groupName', (req, res)=> {groupsRoutes.patchGroupName(req, res)})
+app.patch("/groupName", (req, res) => {
+  groupsRoutes.patchGroupName(req, res);
+});
 
-app.delete('/group/:groupName', (req, res)=> {groupsRoutes.deleteGroup(req, res)})
-
+app.delete("/group/:groupName", (req, res) => {
+  groupsRoutes.deleteGroup(req, res);
+});
 
 const PORT = process.env.PORT || 3000;
 
-server.listen(PORT, () => console.log(`Now running on http://localhost:${PORT}`));
-
+server.listen(PORT, () =>
+  console.log(`Now running on http://localhost:${PORT}`)
+);
