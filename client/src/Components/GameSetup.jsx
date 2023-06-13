@@ -2,32 +2,29 @@ import { useEffect, useState, useContext } from "react";
 import { SocketContext } from "../socket.js";
 
 
-const GameSetup = ({ nextStage }) => {
+const GameSetup = ({ nextStage, gameState }) => {
   const socket = useContext(SocketContext);
 
-  const [gameState, setGameState] = useState({});
+  const [players, setPlayers] = useState({});
+  const [teamMembers, setTeamMembers] = useState(
+    [[], []]);
 
-  // useEffect(() => {
-  //   const updateState = data => {
-  //     setGameState(data)
-  //   }
 
-  //   socket.on('gameState', updateState);
+  useEffect(() => {
+    setPlayers(gameState.players);
+    setTeamMembers([gameState.team_1_members, gameState.team_1_member]);
+    console.log('inside use effect', gameState)
+  }, [gameState])
 
-  //   return () => {
-  //     socket.off('gameState', updateState);
-  //   }
-  // }, []);
 
-  const updateState = data => {
-    setGameState(data)
+  const getTotalPlayers = () => {
+    if (!players) return 0;
+    return Object.values(players)?.length;
   }
 
-  socket.on('gameState', updateState);
-
-
-  console.log('rendered', gameState)
-
+  const getTotalUnassigned = () => {
+    getTotalPlayers - teamMembers[0]?.length - teamMembers[1]?.length;
+  }
 
   return (
     <div className="container flex flex-col h-5/6 max-w-6xl mx-auto my-12 px-8">
@@ -45,11 +42,12 @@ const GameSetup = ({ nextStage }) => {
 
       <div>
         <div>
-          Undecided {2 / 8}
+          Undecided {getTotalUnassigned()} / {getTotalPlayers()}
           <br />
           waiting on
           <br />
-          {gameState.players && Object.values(gameState.players).map((player, idx) => {
+          {players && Object.values(players).map((player, idx) => {
+            console.log('here')
             return (
               <span key={idx}>{player} </span>
             )

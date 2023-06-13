@@ -11,8 +11,12 @@ const RoomPage = () => {
   let topic = "Technology";
   const { user } = useUser();
 
+  // TODO: there should be a better way to determine the stage of the game
+  // component rendered also depends on the role of the player
+  // ie. spymaster vs. operator
   // 3 possible stages: init, play, result
   const [stage, setStage] = useState("init");
+  const [gameState, setGameState] = useState({});
 
 
   useEffect(() => {
@@ -25,6 +29,10 @@ const RoomPage = () => {
     socket.emit("initRoom", temp);
   }, []);
 
+  socket.on('gameState', data => {
+    setGameState(data)
+  });
+
   const nextStage = (currentStage) => {
     const stages = ['init', 'play', 'result'];
     const currentIndex = stages.indexOf(currentStage);
@@ -35,8 +43,10 @@ const RoomPage = () => {
 
   return (
     <>
-      {stage === 'init' && (<GameSetup nextStage={nextStage} />)}
-      {stage === 'play' && (<Gameboard />)}
+      {stage === 'init' && (
+      <GameSetup gameState={gameState} nextStage={nextStage} setGameState={setGameState}/>
+      )}
+      {stage === 'play' && (<Gameboard gameState={gameState} />)}
       {stage === 'result' && (<Gameboard />)}
     </>
   );
