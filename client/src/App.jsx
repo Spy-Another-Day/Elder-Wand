@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useContext } from 'react';
 import { SocketContext } from './socket.js';
-import Chat from './components/Chat.jsx';
 import './App.css'
 
 import LandingPage from './Pages/LandingPage'
@@ -13,7 +12,6 @@ const themes = ['dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'busin
 function App() {
 
   const [theme, setTheme] = useState('business')
-
 
   const socket = useContext(SocketContext);
 
