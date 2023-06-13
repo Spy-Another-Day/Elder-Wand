@@ -25,7 +25,7 @@ const RoomPage = () => {
     temp.topic = topic;
     temp.user = user.username;
     temp.userID = user.id;
-    console.log('temp', temp)
+    // console.log('Object sending to init room', temp)
     socket.emit("initRoom", temp);
   }, []);
 
