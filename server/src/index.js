@@ -134,12 +134,15 @@ io.on("connection", (socket) => {
         wordsRoutes
           .initGameState(data)
           .then((gameState) => {
+            gameState.players.push({name: data.user, id:data.userID});
             redisClient.set(data.roomID, JSON.stringify(gameState));
             io.to(data.roomID).emit("gameState", gameState);
           })
           .catch((err) => console.log(err));
       } else {
-        io.to(data.roomID).emit("gameState", JSON.parse(result));
+        const gameState = JSON.parse(result);
+        gameState.players.push({name: data.user, id:data.userID});
+        io.to(data.roomID).emit("gameState", gameState);
       }
     });
   });
