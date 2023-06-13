@@ -15,6 +15,9 @@ const RoomPage = () => {
     let temp = {};
     temp.roomID = params.roomID;
     temp.topic = topic;
+    //temp.cards
+    //temp.assassins
+    //temp.agents
     socket.emit("roomExist", temp);
 
     // axios.get(`${import.meta.env.VITE_SERVER_URL}/initGame/${topic}`)

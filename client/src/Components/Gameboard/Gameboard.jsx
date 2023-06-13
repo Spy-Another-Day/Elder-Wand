@@ -8,7 +8,7 @@ import { SocketContext } from '../../socket.js';
 export default function Gameboard() {
   const socket = useContext(SocketContext);
   //maybe sent from upper component
-
+  let topic = 'general'
   //fix:running twice
 
 
