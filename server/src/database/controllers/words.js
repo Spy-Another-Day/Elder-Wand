@@ -227,6 +227,151 @@ module.exports = {
 
 
     }
+  },
+  initGameState: (params) => {
+    const topic = params.topic;
+    const numberOfCards = params.cards || 25;
+    const numberOfAssassins = params.assassins || 1;
+    const numberOfAgents = params.agents || 8;
+
+    if((numberOfAgents * 2) + 1 + numberOfAssassins > numberOfCards) {
+      res.status(205).send('invalid settings');
+    } else{
+      const lookup = {topic: topic}
+      var data = {};
+
+      data.topic = topic;
+      data.team_1_guessed = 0;
+      data.team_2_guessed = 0;
+      data.team_1_guess_goal = numberOfAgents;
+      data.team_2_guess_goal = numberOfAgents;
+      data.team_1_members = [];
+      data.team_2_members = [];
+      data.team_1_spymaster = '';
+      data.team_2_spymaster = '';
+      data.players = {};
+      var deck = [];
+      var team_1 = 'team_1';
+      var team_2 = 'team_2';
+
+      const numberOfBystanders = numberOfCards - (numberOfAssassins + (numberOfAgents * 2) + 1);
+
+      return Words.find(lookup)
+      .then(result=> {
+
+        var words = result[0].words;
+        var randomIndex = Math.floor(Math.random() * words.length);
+
+        var temp = {};
+
+        for(var i = 0; i < numberOfBystanders; i++) {
+          //innocent bystander
+          randomIndex = Math.floor(Math.random() * words.length);
+
+          temp = {};
+
+          temp.word = words[randomIndex];
+          temp.belongsTo = 'bystander';
+          temp.isTouched = false;
+          deck.push(temp);
+
+          words.splice(randomIndex, 1);
+        }
+
+        for(var i = 0; i < numberOfAgents; i++) {
+          //team 1
+          randomIndex = Math.floor(Math.random() * words.length);
+
+          temp = {};
+
+          temp.word = words[randomIndex];
+          temp.belongsTo = team_1;
+          temp.isTouched = false;
+          deck.push(temp);
+
+          words.splice(randomIndex, 1);
+
+          //team 2
+          randomIndex = Math.floor(Math.random() * words.length);
+
+          temp = {};
+
+          temp.word = words[randomIndex];
+          temp.belongsTo = team_2;
+          temp.isTouched = false;
+          deck.push(temp);
+
+          words.splice(randomIndex, 1);
+
+        }
+
+        //assassin
+        for(var i = 0; i< numberOfAssassins; i++) {
+          randomIndex = Math.floor(Math.random() * words.length);
+
+          temp = {};
+
+          temp.word = words[randomIndex];
+          temp.belongsTo = 'assassin';
+          temp.isTouched = false;
+          deck.push(temp);
+          words.splice(randomIndex, 1);
+        }
+        //start up team
+        randomIndex = Math.floor(Math.random() * words.length);
+        temp = {};
+        temp.word = words[randomIndex];
+        temp.isTouched = false;
+
+        if (Math.random() >.50) {
+          temp.belongsTo = team_1;
+          data.startUpTeam = team_1;
+          data.currentTeam = team_1;
+
+          data.team_1_guess_goal++;
+
+        } else{
+          temp.belongsTo = team_2;
+          data.startUpTeam = team_2;
+          data.currentTeam = team_2;
+
+          data.team_2_guess_goal++;
+
+        }
+        deck.push(temp);
+
+        deck = shuffle(deck)
+        var deckIndex = 0;
+
+        var rows = Math.floor(Math.sqrt(deck.length))
+        var cols = Math.floor(deck.length / rows )
+        var a = [];
+        for(var i = 0; i < rows; i++) {
+          a[i] = [];
+          for(var x = 0; x < cols; x++) {
+            a[i][x] = deck[deckIndex]
+            deckIndex++;
+          }
+        }
+
+        var tempArray = [];
+
+        for(var i = deckIndex; i < deck.length; i++) {
+
+          tempArray.push(deck[deckIndex]);
+          deckIndex++
+        }
+
+
+        if(tempArray.length !== 0) {
+          a.push(tempArray);
+        }
+        data.words = a;
+        return data;
+      })
+      .catch(err => console.log(err))
+    }
+
   }
 
 }
