@@ -13,16 +13,14 @@ export default function Game(){
 
 
   // socket.emit('gameState', gameState)
-
+  
   if(cards.length === 0) {
-    return (<progress></progress>)
-  }
-  else {
-    return <>
-    <div className="bg-red-700 flex flex-col items-center ">
-      {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
-    </div>
-
-    </>
+    return <progress/>
+  } else {
+    return (
+      <div className="bg-red-700 flex flex-col items-center ">
+        {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
+      </div>
+    )
   }
 }
