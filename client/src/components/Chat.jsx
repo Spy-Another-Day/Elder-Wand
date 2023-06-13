@@ -8,7 +8,6 @@ const Chat = () => {
 
 
   const [messages, setMessages] = useState([])
-  const [username, setUsername] = useState('')
   const [clientId, setClientId] = useState('')
   const params = useParams();
 
@@ -17,19 +16,13 @@ const Chat = () => {
   useEffect(()=>{
 
     const handleMessages = (msg) => {
-      console.log(msg)
+      // console.log(msg)
       setMessages(prevMessages => [...prevMessages, msg])
     }
 
     const handleId =  (data) => {
       setClientId(data.socketId);
     }
-
-    const handleUsername =  (data) => {
-      setUsername(data.socketId);
-    }
-
-    socket.on('username', handleUsername)
 
     socket.on('id', handleId)
 
@@ -38,7 +31,6 @@ const Chat = () => {
     return () => {
       socket.off('message', handleMessages)
       socket.off('id', handleId)
-      socket.off('username', handleUsername)
       // socket.off('id', handleId)  <-- This prevents it from creating two event listeners and console logging twice, however I lose track of the userId as well... will need to find a fix
     }
 
@@ -50,11 +42,10 @@ const Chat = () => {
     if (input.value) {
       var messageInfo = {
         clientId: socket.id,
-        username: username,
         message: input.value,
         roomId: params.roomID
       }
-      socket.emit('sendmessage', messageInfo);
+      socket.emit('sendMessage', messageInfo);
       input.value = "";
       console.log(clientId)
     }
