@@ -3,8 +3,26 @@ export const content = ['./src/**/*.{js,ts,jsx,tsx}'];
 export const plugins = [require("daisyui")];
 export const daisyui = {
   themes: [
-    'business',
     {
+      Spies: {
+        // white
+        primary: "#FCFCFB",
+        // black
+        secondary: "#030303",
+        // red
+        accent: "#CA0000",
+        // white
+        neutral: "#3F4242",
+        "base-100": "#a7c957",
+        // red
+        info: "#ff8585",
+        // blue
+        success: "#4477b3",
+        // yellow
+        warning: "#f8ff7a",
+        // green
+        error: "#52a15a"
+      },
       Stigander: {
         // green
         primary: "#6a994e",
@@ -44,8 +62,9 @@ export const daisyui = {
         warning: "#eeffaa",
         // purple
         error: "#d0bfff"
-      },
+      }
     },
+    'business',
     "light",
     "retro",
     "dracula",
