@@ -25,7 +25,16 @@ dotenv.config();
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
 
-  io.emit('test123', 'hello')
+  io.emit('id', {socketId: socket.id})
+
+  socket.on('sendmessage', (data) => {
+    io.emit('message', data)
+  })
+
+  socket.on('cat', (msg) => {
+    console.log(msg)
+  })
+  io.emit('dogs', 'test abcd')
 
   // const users = [];
   // for (const [id, connectedSocket] of io.of('/').sockets) {
