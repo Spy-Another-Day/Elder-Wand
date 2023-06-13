@@ -1,6 +1,8 @@
 import react, {useEffect, useState, userRef, useContext} from 'react';
 import { SocketContext } from '../../socket.js';
-import Cards from './Cards.jsx'
+import Cards from './Cards.jsx';
+import ClueView from './ClueView.jsx';
+
 export default function Game(){
   const socket = useContext(SocketContext);
 
@@ -21,7 +23,7 @@ export default function Game(){
         return <Cards key={i} row={row}/>
       })}
     </div>
-
+    <ClueView room={gameState.roomID} currentTeam={gameState.currentTeam} editor={ 'currentTeam === this users team && isSpyMaster' }/>
     </>
   }
 }
