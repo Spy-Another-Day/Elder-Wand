@@ -36,6 +36,13 @@ io.on("connection", (socket) => {
     currentRoomId =  data.roomID;
   });
 
+  io.emit('id', {socketId: socket.id})
+
+  socket.on('sendMessage', (data) => {
+    console.log(data)
+    io.to(data.roomId.toString()).emit('message', data)
+  })
+
 
   socket.on("roomExist", (data) => {
     redisClient.get(data.roomID).then((result) => {

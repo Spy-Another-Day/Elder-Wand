@@ -11,10 +11,9 @@ import ErrorPage from './Pages/ErrorPage'
 const themes = ['dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
 function App() {
 
+  const [theme, setTheme] = useState('business')
 
   const socket = useContext(SocketContext);
-  // console.log(socket)
-  const [theme, setTheme] = useState('business')
 
   socket.on('test123', (msg) => {
     console.log(msg)
