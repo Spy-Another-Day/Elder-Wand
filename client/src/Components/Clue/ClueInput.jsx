@@ -6,10 +6,8 @@ const ClueInput = ({ submitClue }) => {
   const shareHandler = () => {
     if (clueInput === '') {
       alert('Please enter a clue.')
-    } else if (Number.parseInt(clueNumberInput) < 0 || Number.parseInt(clueNumberInput) > 9) {
+    } else if (!(clueNumberInput === 'unlimited' || (Number.parseInt(clueNumberInput) >= 0 && Number.parseInt(clueNumberInput) <= 9))) {
       alert('Please enter a valid number of cards (0 - 9, or unlimited).' )
-    } else if (clueNumberInput !== 'unlimited') {
-      alert('Please enter a valid number of cards (1 - 9, or unlimited).' )
     } else {
       submitClue(clueInput, clueNumberInput);
     }
