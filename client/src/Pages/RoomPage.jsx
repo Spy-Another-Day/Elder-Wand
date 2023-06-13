@@ -14,13 +14,14 @@ const RoomPage = () => {
   // 3 possible stages: init, play, result
   const [stage, setStage] = useState("init");
 
+
   useEffect(() => {
     let temp = {};
     temp.roomID = params.roomID;
     temp.topic = topic;
     temp.user = user.username;
-    temp.userID = socket.id;
-    // console.log(temp)
+    temp.userID = user.id;
+    console.log('temp', temp)
     socket.emit("initRoom", temp);
   }, []);
 
@@ -31,7 +32,6 @@ const RoomPage = () => {
     setStage(stages[nextIndex]);
   }
 
-  console.log('rendered room page', stage)
 
   return (
     <>

@@ -7,17 +7,24 @@ const GameSetup = ({ nextStage }) => {
 
   const [gameState, setGameState] = useState({});
 
-  useEffect(() => {
-    const updateState = data => {
-      setGameState(data)
-    }
+  // useEffect(() => {
+  //   const updateState = data => {
+  //     setGameState(data)
+  //   }
 
-    socket.on('gameState', updateState);
+  //   socket.on('gameState', updateState);
 
-    return () => {
-      socket.off('gameState', updateState);
-    }
-  }, []);
+  //   return () => {
+  //     socket.off('gameState', updateState);
+  //   }
+  // }, []);
+
+  const updateState = data => {
+    setGameState(data)
+  }
+
+  socket.on('gameState', updateState);
+
 
   console.log('rendered', gameState)
 
@@ -42,14 +49,14 @@ const GameSetup = ({ nextStage }) => {
           <br />
           waiting on
           <br />
-          {gameState.players && gameState.players.map(player => {
+          {gameState.players && Object.values(gameState.players).map((player, idx) => {
             return (
-              <span key={player.id}>{player.name} </span>
+              <span key={idx}>{player} </span>
             )
           })}
         </div>
       </div>
-      {/* <button onClick={() => nextStage("init")}>Next</button> */}
+      <button onClick={() => nextStage("init")}>Next</button>
     </div>
   );
 }

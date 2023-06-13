@@ -129,19 +129,22 @@ io.on("connection", (socket) => {
     socket.join(data.roomID);
 
     redisClient.get(data.roomID).then((result) => {
-      console.log(result);
+      // console.log(result);
       if (result === null) {
+        console.log('Created a new room with id :', data.roomID)
         wordsRoutes
           .initGameState(data)
           .then((gameState) => {
-            gameState.players.push({name: data.user, id:data.userID});
+            gameState.players[data.userID] = data.user;
             redisClient.set(data.roomID, JSON.stringify(gameState));
             io.to(data.roomID).emit("gameState", gameState);
           })
           .catch((err) => console.log(err));
       } else {
+        console.log('Return game state in room with id :', data.roomID)
         const gameState = JSON.parse(result);
-        gameState.players.push({name: data.user, id:data.userID});
+        gameState.players[data.userID] = data.user;
+        redisClient.set(data.roomID, JSON.stringify(gameState));
         io.to(data.roomID).emit("gameState", gameState);
       }
     });
