@@ -5,13 +5,13 @@ const ClueInput = ({ submitClue }) => {
   const [clueNumberInput, setClueNumberInput] = useState('');
 
   return (
-    <div className='clue-container'>
+    <div className='clue-container p-10'>
       <input
         type='text'
         value={clueInput}
         onChange={(e) => setClueInput(e.target.value)}
         placeholder='Enter your clue'
-        className='input input-ghost w-full max-w-xs'
+        className='input input-bordered w-full max-w-xs'
       />
       <input
         type='text'
