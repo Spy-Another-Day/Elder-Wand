@@ -72,6 +72,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on('clue', (roomId, clue, clueNumber) => {
+    io.to(roomId).emit('clue', clue, clueNumber);
+  });
+
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
     redisClient.get(currentRoomId)
@@ -98,6 +102,8 @@ io.on("connection", (socket) => {
     .catch(err => console.log(err))
   });
 
+
+
   // socket.on('initialGameState', data => {
 
   //   redisClient.get(data.roomID)
@@ -114,6 +120,29 @@ io.on("connection", (socket) => {
   //   })
 
   // })
+
+  socket.on("roomExist", (data) => {
+    redisClient.get(data.roomID).then((result) => {
+      console.log(result);
+      if (result === null) {
+        wordsRoutes
+          .initGameState(data)
+          .then((gameState) => {
+            redisClient.set(data.roomID, JSON.stringify(gameState));
+            io.to(data.roomID).emit("gameState", gameState);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        io.to(data.roomID).emit("gameState", JSON.parse(result));
+      }
+    });
+  });
+
+
+
+  socket.on("disconnect", (data) => {
+    console.log(socket.id, "left");
+  });
 
   // const users = [];
   // for (const [id, connectedSocket] of io.of('/').sockets) {
