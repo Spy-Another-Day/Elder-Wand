@@ -68,6 +68,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on('clue', (roomId, clue, clueNumber) => {
+    io.to(roomId).emit('clue', clue, clueNumber);
+  });
+
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
   });
