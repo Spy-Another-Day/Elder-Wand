@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom"
 import { SocketContext } from '../socket.js'
 import uuid4 from 'uuid4';
+import Chat from '../components/Chat.jsx'
 
 const LandingPage = () => {
   const socket = useContext(SocketContext);

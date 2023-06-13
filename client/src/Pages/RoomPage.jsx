@@ -2,6 +2,7 @@ import react, { useEffect, useState, userRef, useContext } from "react";
 import Gameboard from "../Components/Gameboard/Gameboard.jsx";
 import { SocketContext } from "../socket.js";
 import { useParams } from "react-router-dom";
+import Chat from '../components/Chat.jsx';
 const RoomPage = () => {
   const socket = useContext(SocketContext);
 
@@ -9,7 +10,7 @@ const RoomPage = () => {
   const params = useParams();
 
   socket.emit("roomID", params);
-  let topic = "Technology";
+  let topic = "general";
   useEffect(() => {
     let temp = {};
     temp.roomID = params.roomID;
