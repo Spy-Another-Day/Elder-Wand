@@ -13,11 +13,9 @@ const ClueView = ({ roomId, currentTeam, editor = false }) => {
 
   // This gets called within the ClueInput component
   const submitClue = (clueToShare, clueNumberToShare) => {
-    // emit clue
     socket.emit('clue', roomId, clueToShare, clueNumberToShare);
-    // setEditing to false
     setEditing(false);
-  }
+  };
 
   socket.on('clue', (clue, clueNumber) => {
     setClue(clue);
@@ -28,7 +26,7 @@ const ClueView = ({ roomId, currentTeam, editor = false }) => {
     (!editor || !editing)
     ?
     <div className='clue-container p-5'>
-      <div className='p-5'>{ `${currentTeam}'s clue is ...` }</div>
+      <div className='p-5'>{ `${currentTeam === 'team_1' ? 'Team 1' : 'Team 2'}'s clue is ...` }</div>
       <div className='clue p-5 kbd'>{ clue }</div>
       <div className='number p-5 kbd'>{ clueNumber }</div>
     </div>
