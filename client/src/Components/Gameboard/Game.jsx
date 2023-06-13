@@ -27,7 +27,7 @@ export default function Game(){
     {/*
         TO DO: Make the editor prop below dependent on whether current team === this player's team
     */}
-    <ClueView roomId={gameState.roomId} currentTeam={gameState.currentTeam} editor={ isSpyMaster } />
+    <ClueView roomId={gameState.roomId} currentTeam={gameState.currentTeam} editor={ isSpymaster } />
     </>
   }
 }
