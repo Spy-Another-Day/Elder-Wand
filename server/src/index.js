@@ -28,11 +28,74 @@ const io = new Server(server, { cors: { origin: "*" } });
 dotenv.config();
 
 io.on("connection", (socket) => {
+  var currentRoomId;
   console.log(`${socket.id} connected`);
 
   socket.on("roomID", (data) => {
     socket.join(data.roomID);
+    currentRoomId =  data.roomID;
   });
+
+
+  socket.on("roomExist", (data) => {
+    redisClient.get(data.roomID).then((result) => {
+
+      if (result === null) {
+        wordsRoutes
+          .initGameState(data)
+          .then((gameState) => {
+            gameState.host = socket.id;
+            gameState.players[socket.id] = socket.id;
+            redisClient.set(data.roomID, JSON.stringify(gameState));
+            io.to(data.roomID).emit("gameState", gameState);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        var gameState = JSON.parse(result);
+
+        if(gameState.host === undefined) {
+          gameState.host = socket.id;
+          console.log(1111, gameState.host)
+        }
+
+        gameState.players[socket.id] = socket.id;
+        redisClient.set(data.roomID, JSON.stringify(gameState));
+        io.to(data.roomID).emit("gameState", gameState);
+      }
+    });
+  });
+
+  socket.on('clue', (roomId, clue, clueNumber) => {
+    io.to(roomId).emit('clue', clue, clueNumber);
+  });
+
+  socket.on("disconnect", (data) => {
+    console.log(socket.id, "left");
+    redisClient.get(currentRoomId)
+    .then( result => {
+
+      var gameState = JSON.parse(result);
+      delete gameState.players[socket.id];
+      delete gameState.team_1_members[socket.id];
+      delete gameState.team_2_members[socket.id];
+      if (socket.id === gameState.host) {
+        console.log(123)
+        gameState.host = undefined
+        for(var i in gameState.players) {
+          console.log({i})
+          gameState.host = i;
+          redisClient.set(currentRoomId, JSON.stringify(gameState))
+          io.to(gameState.roomID).emit('gameState', gameState)
+          return;
+        }
+      }
+      redisClient.set(currentRoomId, JSON.stringify(gameState))
+      io.to(gameState.roomID).emit('gameState', gameState)
+    })
+    .catch(err => console.log(err))
+  });
+
+
 
   // socket.on('initialGameState', data => {
 
@@ -68,9 +131,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on('clue', (roomId, clue, clueNumber) => {
-    io.to(roomId).emit('clue', clue, clueNumber);
-  });
+
 
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");

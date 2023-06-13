@@ -11,6 +11,7 @@ export default function Game(){
   socket.on('gameState', data => {
     setGameState(data)
     setCards(data.words)
+    console.log(data.host)
   })
 
   const isSpyMaster = true;
