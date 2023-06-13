@@ -1,7 +1,7 @@
 import {useState, useContext, useEffect} from 'react';
 import {SocketContext} from '../../socket.js';
 import ClueInput from './ClueInput.jsx';
-import { useParams } from "react-router-dom";  // only needed for roomId
+import { useParams } from "react-router-dom";  // only needed for roomId if this is not included in game state object
 
 // editor should be true when isSpyMaster and teamTurn matches own team
 const ClueView = ({ roomId, currentTeam, editor = false }) => {
@@ -20,7 +20,6 @@ const ClueView = ({ roomId, currentTeam, editor = false }) => {
   }
 
   socket.on('clue', (clue, clueNumber) => {
-    console.log(clue);
     setClue(clue);
     setClueNumber(clueNumber);
   });
@@ -29,8 +28,9 @@ const ClueView = ({ roomId, currentTeam, editor = false }) => {
     (!editor || !editing)
     ?
     <div className='clue-container'>
-      <div className='clue'>{ clue }</div>
-      <div className='number'>{ clueNumber }</div>
+      <div className='p-5'>{ `${currentTeam}'s clue is ...` }</div>
+      <div className='clue p-5 kbd'>{ clue }</div>
+      <div className='number p-5 kbd'>{ clueNumber }</div>
     </div>
     :
     <ClueInput submitClue={submitClue}/>

@@ -13,7 +13,7 @@ export default function Game(){
     setCards(data.words)
   })
 
-
+  const isSpyMaster = true;
   // socket.emit('gameState', gameState)
 
   if(cards.length === 0) {
@@ -26,7 +26,9 @@ export default function Game(){
         return <Cards key={i} row={row}/>
       })}
     </div>
-    <ClueView room={gameState.roomID} currentTeam={gameState.currentTeam} editor={ true }/>
+    {/* This can move up to GameBoard component once we move the GameState there */}
+    <ClueView roomId={gameState.roomId} currentTeam={gameState.currentTeam} editor={true} />
+    {/* isSpyMaster && gameState.currentTeam === 'team_2' */}
     </>
   }
 }
