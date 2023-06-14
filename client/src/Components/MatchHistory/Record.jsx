@@ -43,12 +43,19 @@ return(<>
     <div className="grid flex-grow  card  rounded-box place-items-center bg-info">
     <div>
       <h1>Team {team_1}</h1>
-      <h2>{startUpTeam === team_1 ? '(team guess first)': '(team guess second)'}</h2>
+
+      {startUpTeam === team_1 ? '(team guess first)': '(team guess second)'}
+    </div>
+    <div>
+      {teamWon === team_1 ? (<div>Win</div>) :(<div>Lose</div>) }
     </div>
 
     <div>
-    {teamWon === team_1 ? (<div>Win</div>) :(<div>Lose</div>) }
-    code guessed: {team_1_guessed}
+      <div>Score: {team_1_score}</div>
+      <div>
+        code guessed: {team_1_guessed}
+      </div>
+
     </div>
 
     <div className="overflow-x-auto">
@@ -77,9 +84,6 @@ return(<>
       </tbody>
 
     </table>
-    <div>
-
-    </div>
   </div>
 
     </div>
@@ -122,6 +126,7 @@ return(<>
         })
       }
       </div>
+      <h1>Win by: {winReason}</h1>
     </div>
 
     <div className="grid flex-grow  card  rounded-box place-items-center bg-success">
@@ -129,10 +134,17 @@ return(<>
         <h1>Team {team_2}</h1>
         <h2>{startUpTeam === team_2 ? '(team guess first)': '(team guess second)'}</h2>
         </div>
-      <div>
+        <div>
       {teamWon === team_2 ? (<div>Win</div>) :(<div>Lose</div>) }
-    code guessed: {team_1_guessed}
+    </div>
+
+    <div>
+      <div>Score: {team_2_score}</div>
+      <div>
+        code guessed: {team_2_guessed}
       </div>
+
+    </div>
 
     <div className="overflow-x-auto">
     <table className="table">

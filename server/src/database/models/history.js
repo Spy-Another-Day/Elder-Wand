@@ -5,7 +5,7 @@ const historySchema = mongoose.Schema({
 
   roomID: {type: String,
     require: true,
-    index: true},
+    },
   team_1:{type:String,
     require:true},
     team_2:{type:String,
