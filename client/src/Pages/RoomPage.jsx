@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Gameboard from "../Components/Gameboard/Gameboard.jsx";
 import GameSetup from '../Components/GameSetup'
 import { useUser } from "@clerk/clerk-react";
+import { GameStateContext } from '../Components/Context.js'
 
 const RoomPage = () => {
   const socket = useContext(SocketContext);
@@ -17,7 +18,6 @@ const RoomPage = () => {
   // 3 possible stages: init, play, result
   const [stage, setStage] = useState("init");
   const [gameState, setGameState] = useState({});
-
 
   useEffect(() => {
     let temp = {};
@@ -42,13 +42,13 @@ const RoomPage = () => {
 
 
   return (
-    <>
+    <GameStateContext.Provider value={gameState}>
       {stage === 'init' && (
-      <GameSetup gameState={gameState} nextStage={nextStage} setGameState={setGameState}/>
+      <GameSetup nextStage={nextStage} setGameState={setGameState}/>
       )}
-      {stage === 'play' && (<Gameboard gameState={gameState} />)}
+      {stage === 'play' && (<Gameboard />)}
       {stage === 'result' && (<Gameboard />)}
-    </>
+    </GameStateContext.Provider>
   );
 };
 
