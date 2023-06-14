@@ -1,8 +1,8 @@
 import {useState, useContext} from 'react';
 import {SocketContext} from '../../socket.js';
+import {GameStateContext} from '../Components/Context.js';
+import {useUser} from "@clerk/clerk-react";
 import ClueInput from './ClueInput.jsx';
-import { GameStateContext } from '../Components/Context.js';
-import { useUser } from "@clerk/clerk-react";
 
 const ClueView = () => {
   const gameState = useContext(GameStateContext);
@@ -33,7 +33,7 @@ const ClueView = () => {
       <div className='number p-5 kbd'>{ clueNumber }</div>
     </div>
     :
-    <ClueInput submitClue={submitClue}/>
+    <ClueInput submitClue={submitClue} />
   );
 }
 
