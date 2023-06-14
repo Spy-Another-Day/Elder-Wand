@@ -116,25 +116,28 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
-    redisClient.get(currentRoomId)
-    .then( result => {
+    if(currentRoomId !== undefined) {
+      redisClient.get(currentRoomId)
+      .then( result => {
 
-      var gameState = JSON.parse(result);
-      delete gameState.connection[socket.id];
-      if (socket.id === gameState.host) {
-        gameState.host = undefined
-        for(var i in gameState.connection) {
-          console.log({i})
-          gameState.host = i;
-          redisClient.set(currentRoomId, JSON.stringify(gameState))
-          io.to(gameState.roomID).emit('gameState', gameState)
-          return;
+        var gameState = JSON.parse(result);
+        delete gameState.connection[socket.id];
+        if (socket.id === gameState.host) {
+          gameState.host = undefined
+          for(var i in gameState.connection) {
+            console.log({i})
+            gameState.host = i;
+            redisClient.set(currentRoomId, JSON.stringify(gameState))
+            io.to(gameState.roomID).emit('gameState', gameState)
+            return;
+          }
         }
-      }
-      redisClient.set(currentRoomId, JSON.stringify(gameState))
-      io.to(gameState.roomID).emit('gameState', gameState)
-    })
-    .catch(err => console.log(err))
+        redisClient.set(currentRoomId, JSON.stringify(gameState))
+        io.to(gameState.roomID).emit('gameState', gameState)
+      })
+      .catch(err => console.log(err))
+    }
+
   });
 
 
