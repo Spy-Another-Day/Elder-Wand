@@ -31,10 +31,10 @@ io.on("connection", (socket) => {
   var currentRoomId;
   console.log(`${socket.id} connected`);
 
-  socket.on("roomID", (data) => {
-    socket.join(data.roomID);
-    currentRoomId =  data.roomID;
-  });
+  // socket.on("roomID", (data) => {
+  //   socket.join(data.roomID);
+  //   currentRoomId =  data.roomID;
+  // });
 
   io.emit('id', {socketId: socket.id})
 
@@ -44,28 +44,34 @@ io.on("connection", (socket) => {
   })
 
 
-  socket.on("roomExist", (data) => {
+  socket.on("initRoom", (data) => {
+    socket.join(data.roomID)
+    currentRoomId = data.roomID;
+
     redisClient.get(data.roomID).then((result) => {
 
       if (result === null) {
         wordsRoutes
           .initGameState(data)
           .then((gameState) => {
+            gameState.connection = {};
+            gameState.connection[socket.id] = socket.id;
+            gameState.roomID = data.roomID;
             gameState.host = socket.id;
-            gameState.players[socket.id] = socket.id;
+            gameState.players[data.userID] = data.user;
             redisClient.set(data.roomID, JSON.stringify(gameState));
             io.to(data.roomID).emit("gameState", gameState);
           })
           .catch((err) => console.log(err));
       } else {
         var gameState = JSON.parse(result);
-
+        gameState.connection[socket.id] = socket.id;
         if(gameState.host === undefined) {
           gameState.host = socket.id;
-          console.log(1111, gameState.host)
         }
 
-        gameState.players[socket.id] = socket.id;
+        gameState.roomID = data.roomID;
+        gameState.players[data.userID] = data.user;
         redisClient.set(data.roomID, JSON.stringify(gameState));
         io.to(data.roomID).emit("gameState", gameState);
       }
@@ -82,13 +88,11 @@ io.on("connection", (socket) => {
     .then( result => {
 
       var gameState = JSON.parse(result);
-      delete gameState.players[socket.id];
-      delete gameState.team_1_members[socket.id];
-      delete gameState.team_2_members[socket.id];
+      delete gameState.connection[socket.id];
       if (socket.id === gameState.host) {
         console.log(123)
         gameState.host = undefined
-        for(var i in gameState.players) {
+        for(var i in gameState.connection) {
           console.log({i})
           gameState.host = i;
           redisClient.set(currentRoomId, JSON.stringify(gameState))
@@ -121,19 +125,27 @@ io.on("connection", (socket) => {
 
   // })
 
-  socket.on("roomExist", (data) => {
+  socket.on("initRoom", (data) => {
+    socket.join(data.roomID);
+
     redisClient.get(data.roomID).then((result) => {
-      console.log(result);
+      // console.log(result);
       if (result === null) {
+        console.log('Created a new room with id :', data.roomID)
         wordsRoutes
           .initGameState(data)
           .then((gameState) => {
+            gameState.players[data.userID] = data.user;
             redisClient.set(data.roomID, JSON.stringify(gameState));
             io.to(data.roomID).emit("gameState", gameState);
           })
           .catch((err) => console.log(err));
       } else {
-        io.to(data.roomID).emit("gameState", JSON.parse(result));
+        console.log('Return game state in room with id :', data.roomID)
+        const gameState = JSON.parse(result);
+        gameState.players[data.userID] = data.user;
+        redisClient.set(data.roomID, JSON.stringify(gameState));
+        io.to(data.roomID).emit("gameState", gameState);
       }
     });
   });

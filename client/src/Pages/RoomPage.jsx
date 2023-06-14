@@ -1,41 +1,53 @@
-import react, { useEffect, useState, userRef, useContext } from "react";
-import Gameboard from "../Components/Gameboard/Gameboard.jsx";
+import { useEffect, useState, useContext } from "react";
 import { SocketContext } from "../socket.js";
 import { useParams } from "react-router-dom";
-import Chat from '../components/Chat.jsx';
+import Gameboard from "../Components/Gameboard/Gameboard.jsx";
+import GameSetup from '../Components/GameSetup'
+import { useUser } from "@clerk/clerk-react";
+
 const RoomPage = () => {
   const socket = useContext(SocketContext);
-
-  const [inGame, setInGame] = useState(true);
   const params = useParams();
+  let topic = "Technology";
+  const { user } = useUser();
 
-  socket.emit("roomID", params);
-  let topic = "general";
+  // TODO: there should be a better way to determine the stage of the game
+  // component rendered also depends on the role of the player
+  // ie. spymaster vs. operator
+  // 3 possible stages: init, play, result
+  const [stage, setStage] = useState("init");
+  const [gameState, setGameState] = useState({});
+
+
   useEffect(() => {
     let temp = {};
     temp.roomID = params.roomID;
     temp.topic = topic;
-    //temp.cards
-    //temp.assassins
-    //temp.agents
-    socket.emit("roomExist", temp);
-
-    // axios.get(`${import.meta.env.VITE_SERVER_URL}/initGame/${topic}`)
-    // .then(({data}) => {
-    //   data.roomID = params.roomID;
-
-    //   socket.emit('initialGameState', data)
-
-    // })
-    // .catch(err=>console.log(err))
+    temp.user = user.username;
+    temp.userID = user.id;
+    // console.log('Object sending to init room', temp)
+    socket.emit("initRoom", temp);
   }, []);
 
-  if (inGame) {
-    return <Gameboard />;
+  socket.on('gameState', data => {
+    setGameState(data)
+  });
+
+  const nextStage = (currentStage) => {
+    const stages = ['init', 'play', 'result'];
+    const currentIndex = stages.indexOf(currentStage);
+    const nextIndex = (currentIndex+1) % 3;
+    setStage(stages[nextIndex]);
   }
+
+
   return (
     <>
-      <h1>This is the room page</h1>
+      {stage === 'init' && (
+      <GameSetup gameState={gameState} nextStage={nextStage} setGameState={setGameState}/>
+      )}
+      {stage === 'play' && (<Gameboard gameState={gameState} />)}
+      {stage === 'result' && (<Gameboard />)}
     </>
   );
 };
