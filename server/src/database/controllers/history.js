@@ -21,7 +21,7 @@ module.exports = {
       team1members.push(`${team_1_members[i]} (${i})`)
     }
     for(var i in team_2_members) {
-      team1members.push(`${team_2_members[i]} (${i})`)
+      team2members.push(`${team_2_members[i]} (${i})`)
     }
     var data = {team_1: team_1,
                 team_2:team_2,
