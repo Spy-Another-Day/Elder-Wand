@@ -1,17 +1,19 @@
 import react, {useEffect, useState, userRef, useContext} from 'react';
 import { SocketContext } from '../../socket.js';
 import Cards from './Cards.jsx';
+import ClueView from '../Clue/ClueView.jsx';
+import { GameStateContext } from '../Context.js'
+import Scoreboard from '../Scoreboard';
 
 export default function Game(){
   const socket = useContext(SocketContext);
   const [isSpymaster, setIsSpymaster] = useState(true)
-  const [gameState, setGameState] = useState({});
   const [cards, setCards] = useState([]);
-  socket.on('gameState', data => {
-    setGameState(data)
-    setCards(data.words)
-    console.log(data.host)
-  })
+  const gameState = useContext(GameStateContext);
+
+  useEffect(()=>{
+    setCards(gameState.words)
+  }, [gameState])
 
   // socket.emit('gameState', gameState)
 
@@ -20,6 +22,7 @@ export default function Game(){
   }
   else {
     return <>
+      <Scoreboard />
     <div className="bg-red-700 flex flex-col items-center ">
       {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
     </div>
