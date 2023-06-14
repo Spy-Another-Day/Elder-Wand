@@ -11,18 +11,23 @@ const ClueView = () => {
   //  EDITING logic
   const userId = useUser().user.userId;
   // Editing is true when gameState.<currentTeam>_spymaster is this user's userId
-  const [editing, setEditing] = useState(userId === gameState[`${gameState.currentTeam}_spymaster`]);
+  const [editing, setEditing] = useState('' === gameState[`${gameState.currentTeam}_spymaster`]);
   useEffect(() => {
     // Update if gameState changes (i.e., when currentTeam switches)
-    setEditing(userId === gameState[`${gameState.currentTeam}_spymaster`]);
+    setEditing('' === gameState[`${gameState.currentTeam}_spymaster`]);
   }, [gameState]);
 
 
   // CLUE LOGIC
   const [clue, setClue] = useState(['waiting for clue...', '?']);  // clue[0] is clue text, clue[1] is number of cards
-  socket.on('clue', (clue, clueNumber) => {
-    setClue([clue, clueNumber]);
-  });
+  useEffect(() => {
+    socket.on('clue', (clue, clueNumber) => {
+      console.log('got clue');
+      setClue([clue, clueNumber]);
+    });
+    return () => socket.removeAllListeners('clue');
+  }, [socket]);
+
   // This gets called within the ClueInput component
   const submitClue = (clueToShare, clueNumberToShare) => {
     socket.emit('clue', gameState.roomID, clueToShare, clueNumberToShare);
