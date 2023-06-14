@@ -5,13 +5,18 @@ import {useUser} from "@clerk/clerk-react";
 import ClueInput from './ClueInput.jsx';
 
 const ClueView = () => {
+  const socket = useContext(SocketContext);
   const gameState = useContext(GameStateContext);
   const userId = useUser().user.userId;
-  // Editing is true when gameState.<currentTeam>_spymaster is this user's userId
-  const [editing, setEditing] = useState(userId === gameState[`${gameState.currentTeam}_spymaster`]);
+
+  const [editing, setEditing] = useState(false);
   const [clue, setClue] = useState('waiting for clue...');
   const [clueNumber, setClueNumber] = useState('');
-  const socket = useContext(SocketContext);
+
+  useEffect(() => {
+    // Editing is true when gameState.<currentTeam>_spymaster is this user's userId
+    setEditing(userId === gameState[`${gameState.currentTeam}_spymaster`]);
+  }, [gameState]);
 
   // This gets called within the ClueInput component
   const submitClue = (clueToShare, clueNumberToShare) => {
