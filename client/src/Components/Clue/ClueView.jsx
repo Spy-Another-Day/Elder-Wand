@@ -9,12 +9,12 @@ const ClueView = () => {
   const gameState = useContext(GameStateContext);
 
   //  EDITING logic
-  const userId = useUser().user.userId;
+  const userId = useUser().user.id;
   // Editing is true when gameState.<currentTeam>_spymaster is this user's userId
-  const [editing, setEditing] = useState('' === gameState[`${gameState.currentTeam}_spymaster`]);
+  const [editing, setEditing] = useState(userId === gameState[`${gameState.currentTeam}_spymaster`]);
   useEffect(() => {
     // Update if gameState changes (i.e., when currentTeam switches)
-    setEditing('' === gameState[`${gameState.currentTeam}_spymaster`]);
+    setEditing(userId === gameState[`${gameState.currentTeam}_spymaster`]);
   }, [gameState]);
 
 

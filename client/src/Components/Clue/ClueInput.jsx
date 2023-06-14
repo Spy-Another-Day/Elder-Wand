@@ -7,9 +7,9 @@ const ClueInput = ({ submitClue }) => {
 
   const shareHandler = () => {
     if (clueInput === '') {
-      setAlertMessage({show: true, text: 'Please enter a clue.'})
+      setAlertMessage({show: true, text: 'Enter a clue for your team before sharing.'})
     } else if (!(clueNumberInput === 'unlimited' || (Number.parseInt(clueNumberInput) >= 0 && Number.parseInt(clueNumberInput) <= 9))) {
-      setAlertMessage({show: true, text: 'Please enter a valid number of cards (0 - 9, or unlimited).'})
+      setAlertMessage({show: true, text: 'Enter a valid number of cards (0 - 9, or unlimited) before sharing.'})
     } else {
       submitClue(clueInput, clueNumberInput);
     }
