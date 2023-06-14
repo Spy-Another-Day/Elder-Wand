@@ -3,7 +3,7 @@ import Game from './Game.jsx'
 import Chat from '../Chat.jsx'
 import axios from 'axios';
 import { SocketContext } from '../../socket.js';
-
+import ClueView from '../Clue/ClueView.jsx';
 
 export default function Gameboard() {
   const socket = useContext(SocketContext);
@@ -11,9 +11,9 @@ export default function Gameboard() {
   let topic = 'general'
   //fix:running twice
 
-
   return (<>
     <Game/>
+    <ClueView />
     <Chat />
   </>)
 

@@ -3,11 +3,13 @@ import {useState} from 'react';
 const ClueInput = ({ submitClue }) => {
   const [clueInput, setClueInput] = useState('');
   const [clueNumberInput, setClueNumberInput] = useState('');
+  const [alertMessage, setAlertMessage] = useState({show: false, text: ''});
+
   const shareHandler = () => {
     if (clueInput === '') {
-      alert('Please enter a clue.')
+      setAlertMessage({show: true, text: 'Enter a clue for your team before sharing.'})
     } else if (!(clueNumberInput === 'unlimited' || (Number.parseInt(clueNumberInput) >= 0 && Number.parseInt(clueNumberInput) <= 9))) {
-      alert('Please enter a valid number of cards (0 - 9, or unlimited).' )
+      setAlertMessage({show: true, text: 'Enter a valid number of cards (0 - 9, or unlimited) before sharing.'})
     } else {
       submitClue(clueInput, clueNumberInput);
     }
@@ -30,6 +32,17 @@ const ClueInput = ({ submitClue }) => {
         className='input input-bordered w-40 max-w-xs'
       />
       <input type='button' value='Share' onClick={shareHandler} className='btn'/>
+      {alertMessage.show &&
+      <div className="badge badge-error gap-2 m-auto">
+        <svg className="w-4 h-4 stroke-current hover:border"
+          onClick={() => setAlertMessage({show: false, text: ''})}
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12">
+          </path>
+        </svg>
+        {alertMessage.text}
+      </div>
+      }
     </div>
   );
 }

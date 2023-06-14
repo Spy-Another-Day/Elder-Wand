@@ -26,10 +26,6 @@ export default function Game(){
     <div className="bg-red-700 flex flex-col items-center ">
       {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
     </div>
-    {/*
-        TO DO: Make the editor prop below dependent on whether current team === this player's team
-    */}
-    <ClueView roomId={gameState.roomId} currentTeam={gameState.currentTeam} editor={ isSpymaster } />
     </>
   }
 }

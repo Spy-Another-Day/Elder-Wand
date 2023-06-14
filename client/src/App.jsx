@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useContext } from 'react';
 import { SocketContext } from './socket.js';
 import './App.css'
+import { UserButton } from '@clerk/clerk-react';
 
 import LandingPage from './Pages/LandingPage'
 import RoomPage from './Pages/RoomPage'
@@ -34,10 +35,10 @@ function App() {
             <a className="btn btn-ghost normal-case text-xl">Spy Another Day</a>
           </div>
           <div className="flex-none">
-
+            <UserButton showName='true' />
             {/* dropdown theme menu */}
             <div className="dropdown z-10">
-              <label tabIndex={0} className="btn m-1">themes</label>
+              <label tabIndex={0} className="btn m-1 ml-5">themes</label>
               <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                 {themes.map((theme, index) => (
                   <li onClick={(e) => { setTheme(e.target.innerText); localStorage.setItem('theme', e.target.innerText) }} key={index}><a>{theme}</a></li>

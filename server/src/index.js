@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
 
 
   socket.on("initRoom", (data) => {
-    socket.join(data.roomID)
+    socket.join(data.roomID);
     currentRoomId = data.roomID;
 
     redisClient.get(data.roomID).then((result) => {
