@@ -10,6 +10,7 @@ const ClueView = () => {
   console.log('game state in ClueView: ', gameState);
   //  EDITING logic
   const userId = useUser().user.id;
+  const username = useUser().user.username;
   // Editing is true when gameState.<currentTeam>_spymaster is this user's userId
   const [editing, setEditing] = useState(userId === gameState[`${gameState.currentTeam}_spymaster`][0]);
   useEffect(() => {
@@ -31,6 +32,12 @@ const ClueView = () => {
   // This gets called within the ClueInput component
   const submitClue = (clueToShare, clueNumberToShare) => {
     socket.emit('clue', gameState.roomID, clueToShare, clueNumberToShare);
+
+    var gameLog = {}
+    gameLog.roomID = gameState.roomID;
+    gameLog.text = `Spymaster ${username} has given a clue: ${clueToShare} ${clueNumberToShare}`
+    socket.emit('gameLog', gameLog)
+
     setEditing(false);
   };
 

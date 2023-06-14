@@ -114,6 +114,10 @@ io.on("connection", (socket) => {
 
   })
 
+  socket.on("gameLog", data => {
+    io.to(data.roomID).emit('gameLog', data.text);
+  })
+
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
     if(currentRoomId !== undefined) {
