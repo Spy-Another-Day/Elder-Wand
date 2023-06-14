@@ -4,13 +4,13 @@ import react, {useEffect, useState, userRef, useContext} from 'react';
 import { SocketContext } from '../../socket.js';
 import Card from './Card.jsx';
 
-export default function Cards({isSpymaster, row}) {
+export default function Cards({isSpymaster, row, isYourTurn }) {
 
   return (
-    <div className="bg-blue-700 flex flex-row justify-center w-min">
+    <div className="bg-accent flex flex-row justify-center w-min">
       {row.map((card,i)=>{
           return (
-            <Card data={card} key={i} isSpymaster={isSpymaster}/>
+            <Card data={card} key={i} isSpymaster={isSpymaster} isYourTurn={isYourTurn}/> 
           )
       })}
     </div>

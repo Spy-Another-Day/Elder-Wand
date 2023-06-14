@@ -22,7 +22,7 @@ const GameInfo = () => {
             <div className="flex">
               {Object.keys(gameState.team_1_members).map((key) => {
                 return (
-                  <p>{gameState.team_1_members[key]} &#160;</p>
+                  <p key={key}>{gameState.team_1_members[key]} &#160;</p>
                 )
               })}
               <p>player</p>
@@ -33,7 +33,7 @@ const GameInfo = () => {
             <div className="flex">
               {Object.keys(gameState.team_2_members).map((key) => {
                 return (
-                  <p>{gameState.team_2_members[key]} &#160;</p>
+                  <p key={key}>{gameState.team_2_members[key]} &#160;</p>
                 )
               })}
               <p>player</p>

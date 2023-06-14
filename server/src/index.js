@@ -160,36 +160,15 @@ io.on("connection", (socket) => {
   // })
 
 
-
+  socket.on('cardSelection', (data, roomID, username) => {
+    io.to(roomID).emit('selectedCard', data.word, username);
+  })
 
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
   });
 
-  // const users = [];
-  // for (const [id, connectedSocket] of io.of('/').sockets) {
-  //   users.push({
-  //     userID: id,
-  //     username: connectedSocket.data.username,
-  //   });
-  // }
-  // socket.emit('users', users);
 
-  // socket.broadcast.emit('user connected', {
-  //   userID: socket.id,
-  //   username: socket.data.username,
-  // });
-
-  // socket.on('private message', ({ content, to }) => {
-  //   socket.to(to).emit('private message', {
-  //     content: content,
-  //     from: socket.id,
-  //   });
-  // });
-
-  // socket.on('disconnect', () => {
-  //   socket.broadcast.emit('user disconnected', socket.id);
-  // });
 });
 
 // middleware

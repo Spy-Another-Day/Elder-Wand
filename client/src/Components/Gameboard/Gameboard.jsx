@@ -10,9 +10,11 @@ export default function Gameboard() {
   let topic = 'general'
   //fix:running twice
 
-  return (<>
-    <Game/>
-    <ClueView />
-  </>)
+  return (
+    <div className='flex flex-col items center h-full'>
+      <Game/>
+      <ClueView />
+    </div>
+  )
 
 }

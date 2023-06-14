@@ -10,12 +10,13 @@ import IconHome from './assets/IconHome'
 import ErrorPage from './Pages/ErrorPage'
 import MatchHistory from './Components/MatchHistory/MatchHistory'
 
-const themes = ['dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
+const themes = ['Spies', 'dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
 function App() {
 
-  const [theme, setTheme] = useState('business')
 
   const socket = useContext(SocketContext);
+  // console.log(socket)
+  const [theme, setTheme] = useState('Spies')
 
   socket.on('test123', (msg) => {
     console.log(msg)
@@ -23,10 +24,10 @@ function App() {
 
   return (
     <SocketContext.Provider value={socket}>
-      <div data-theme={localStorage.getItem('theme') || theme} className='bg-primary w-screen h-[100%]'>
+      <div data-theme={localStorage.getItem('theme') || theme} className='bg-primary h-screen w-screen overflow-clip'>
 
         {/* NavBar */}
-        <div className="navbar bg-base-100">
+        <div className="navbar max-w-full bg-base-100">
           <div className="flex-none">
             <a href="/" className="btn btn-square btn-ghost">
               <IconHome />
