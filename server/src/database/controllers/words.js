@@ -21,6 +21,8 @@ function shuffle(array) {
 
 module.exports = {
   getTopics: (req, res)=> {
+
+
     Words.find().select('topic')
     .then(result=> {
       res.status(200).send(result)

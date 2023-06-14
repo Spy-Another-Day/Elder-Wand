@@ -169,8 +169,8 @@
     "team_2_guessed": 0,
     "team_1_guess_goal": 8,
     "team_2_guess_goal": 9,
-    "team_1_members": [],
-    "team_2_members": [],
+    "team_1_members": {},
+    "team_2_members": {},
     "team_1_spymaster": "",
     "team_2_spymaster": "",
     "players": {},
@@ -342,3 +342,93 @@
 `
 200 group deleted
 `
+
+### History Endpoints
+|    Type        |Endpoints                      |description                 |
+|----------------|-------------------------------|-----------------------------|
+|GET             |/history                | retreives match history by descending order|
+|POST            |/history                          | create a new match history  |
+
+### **GET** */history*
+#### Query Parameters:
+|    Parameter        |type                      |description                 |
+|----------------|-------------------------------|-----------------------------|
+|limit            |number                | Optional limit for how many data sent back, default 30 |
+
+#### Response:
+```
+[
+    {
+        "_id": "648a08efd67ba52f546300a4",
+        "topic": "Technology",
+        "roomID": "433231",
+        "team_1": "cat",
+        "team_2": "dog",
+        "team_1_spymaster": "Bengal",
+        "team_2_spymaster": "Bulldog",
+        "team_1_members": ["Maine Coon", "Siamese", "Persian", "Bengal"],
+        "team_2_members": ["Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog"],
+        "words": [
+            [
+                {
+                    "word": "Robotic Process Automation",
+                    "belongsTo": "team_1",
+                    "isTouched": false
+                },
+                ...
+            ]
+            ...
+        ],
+        "team_1_guessed": 0,
+        "team_2_guessed": 0,
+        "team_1_guess_goal": 8,
+        "team_2_guess_goal": 9,
+        "startUpTeam": "team_2",
+        "teamWon": "team_1",
+        "team_1_score": 0,
+        "team_2_score": 0,
+        "winReason": "assassin",
+        "createdAt": "2023-06-14T15:48:41.312Z",
+        "updatedAt": "2023-06-14T15:48:41.312Z",
+        "__v": 0
+    },
+    ...
+]
+```
+
+### **POST** */history*
+#### Body Parameters:
+|    Parameter        |type                      |description                 |
+|----------------|-------------------------------|-----------------------------|
+|topic            |string                | Require topic to determine the game words style |
+|roomID            |string                | Require Room ID to determine which room |
+|teamWon            |string                | Require winning team name  |
+|winReason            |string                | reason for why winning team won |
+|startUpTeam            |string                | Require start up team name |
+|team_1            |string                | Require team 1 name |
+|team_2            |string                | Require team 2 name |
+|team_1_guessed            |number                | Require number of cards that team 1 has guessed |
+|team_2_guessed            |number                | Require number of cards that team 2 has guessed |
+|team_1_members            |object                | Require all team 1 members |
+|team_2_members            |object                | Require all team 2 members |
+|team_1_spymaster            |string                | Require team 1 spymaster name |
+|team_2_spymaster            |string                | Require team 2 spymaster name |
+|team_1_score            |number                | team 1 final score |
+|team_2_score            |number                | team 2 final score |
+|words            |Array                | Require words in the game|
+
+#### properties need to add to gameState before submit
+```
+    {
+        teamWon: String,
+        team_1_score: Number,
+        team_2_score: Number,
+        winReason: String,
+    }
+```
+
+#### Response:
+`
+201 history created
+`
+

@@ -7,6 +7,7 @@ import LandingPage from './Pages/LandingPage'
 import RoomPage from './Pages/RoomPage'
 import IconHome from './assets/IconHome'
 import ErrorPage from './Pages/ErrorPage'
+import MatchHistory from './Components/MatchHistory/MatchHistory'
 
 const themes = ['dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
 function App() {
@@ -31,8 +32,12 @@ function App() {
             </a>
           </div>
           <div className="flex-1">
+            <a href="/leaderboard" className="btn btn-ghost normal-case text-xl">Leader Board</a>
+          </div>
+          <div className="flex-1">
             <a className="btn btn-ghost normal-case text-xl">Spy Another Day</a>
           </div>
+
           <div className="flex-none">
 
             {/* dropdown theme menu */}
@@ -52,6 +57,7 @@ function App() {
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/leaderboard" element={<MatchHistory/>}/>
           <Route path="/room/:roomID" element={<RoomPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

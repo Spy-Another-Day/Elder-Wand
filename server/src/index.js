@@ -7,6 +7,7 @@ const { Server, Socket } = require("socket.io");
 const usersRoutes = require("./database/controllers/users.js");
 const wordsRoutes = require("./database/controllers/words.js");
 const groupsRoutes = require("./database/controllers/groups.js");
+const historyRoutes = require("./database/controllers/history.js");
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
 redisClient.connect();
@@ -91,7 +92,6 @@ io.on("connection", (socket) => {
       var gameState = JSON.parse(result);
       delete gameState.connection[socket.id];
       if (socket.id === gameState.host) {
-        console.log(123)
         gameState.host = undefined
         for(var i in gameState.connection) {
           console.log({i})
@@ -260,6 +260,13 @@ app.patch("/groupName", (req, res) => {
 app.delete("/group/:groupName", (req, res) => {
   groupsRoutes.deleteGroup(req, res);
 });
+
+app.get("/history", (req, res) => {
+  historyRoutes.getHistory(req, res);
+})
+app.post("/history", (req, res) => {
+  historyRoutes.postHistory(req, res);
+})
 
 const PORT = process.env.PORT || 3000;
 
