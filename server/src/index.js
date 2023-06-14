@@ -43,6 +43,11 @@ io.on("connection", (socket) => {
     io.to(data.roomId.toString()).emit('message', data)
   })
 
+  socket.on('modifyGameState', (data) => {
+    redisClient.set(data.roomID, JSON.stringify(data));
+    io.to(data.roomID).emit("gameState", data);
+  })
+
 
   socket.on("initRoom", (data) => {
     socket.join(data.roomID)
@@ -111,7 +116,7 @@ io.on("connection", (socket) => {
 
   // socket.on('initialGameState', data => {
 
-  //   redisClient.get(data.roomID)
+  //   redisClient.get(data.roomID)f
   //   .then(result => {
 
   //     if(result !== null) {
@@ -126,30 +131,30 @@ io.on("connection", (socket) => {
 
   // })
 
-  socket.on("initRoom", (data) => {
-    socket.join(data.roomID);
+  // socket.on("initRoom", (data) => {
+  //   socket.join(data.roomID);
 
-    redisClient.get(data.roomID).then((result) => {
-      // console.log(result);
-      if (result === null) {
-        console.log('Created a new room with id :', data.roomID)
-        wordsRoutes
-          .initGameState(data)
-          .then((gameState) => {
-            gameState.players[data.userID] = data.user;
-            redisClient.set(data.roomID, JSON.stringify(gameState));
-            io.to(data.roomID).emit("gameState", gameState);
-          })
-          .catch((err) => console.log(err));
-      } else {
-        console.log('Return game state in room with id :', data.roomID)
-        const gameState = JSON.parse(result);
-        gameState.players[data.userID] = data.user;
-        redisClient.set(data.roomID, JSON.stringify(gameState));
-        io.to(data.roomID).emit("gameState", gameState);
-      }
-    });
-  });
+  //   redisClient.get(data.roomID).then((result) => {
+  //     // console.log(result);
+  //     if (result === null) {
+  //       console.log('Created a new room with id :', data.roomID)
+  //       wordsRoutes
+  //         .initGameState(data)
+  //         .then((gameState) => {
+  //           gameState.players[data.userID] = data.user;
+  //           redisClient.set(data.roomID, JSON.stringify(gameState));
+  //           io.to(data.roomID).emit("gameState", gameState);
+  //         })
+  //         .catch((err) => console.log(err));
+  //     } else {
+  //       console.log('Return game state in room with id :', data.roomID)
+  //       const gameState = JSON.parse(result);
+  //       gameState.players[data.userID] = data.user;
+  //       redisClient.set(data.roomID, JSON.stringify(gameState));
+  //       io.to(data.roomID).emit("gameState", gameState);
+  //     }
+  //   });
+  // });
 
 
 
