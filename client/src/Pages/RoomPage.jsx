@@ -30,7 +30,7 @@ const RoomPage = () => {
   }, []);
 
   socket.on('gameState', data => {
-    console.log(data)
+    // console.log(data)
     setGameState(data)
   });
 

@@ -59,7 +59,6 @@ const GameSetup = ({ nextStage }) => {
   }
 
   const handleClickClose = () => {
-    console.log('clicked close button')
     setModal(false)
     setTeamInfo({ ...teamInfo, ["team"]: undefined })
   }
@@ -80,7 +79,7 @@ const GameSetup = ({ nextStage }) => {
     return (<div>Loading...</div>);
   }
 
-  console.log('gameState in GameSetup:', gameState)
+  // console.log('gameState in GameSetup:', gameState)
 
   return (
     <div className="container flex flex-col h-5/6 max-w-6xl mx-auto my-12 px-8">
