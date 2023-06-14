@@ -7,14 +7,14 @@ import ClueInput from './ClueInput.jsx';
 const ClueView = () => {
   const socket = useContext(SocketContext);
   const gameState = useContext(GameStateContext);
-
+  console.log('game state in ClueView: ', gameState);
   //  EDITING logic
   const userId = useUser().user.id;
   // Editing is true when gameState.<currentTeam>_spymaster is this user's userId
-  const [editing, setEditing] = useState(userId === gameState[`${gameState.currentTeam}_spymaster`]);
+  const [editing, setEditing] = useState(userId === gameState[`${gameState.currentTeam}_spymaster`][0]);
   useEffect(() => {
     // Update if gameState changes (i.e., when currentTeam switches)
-    setEditing(userId === gameState[`${gameState.currentTeam}_spymaster`]);
+    setEditing(userId === gameState[`${gameState.currentTeam}_spymaster`][0]);
   }, [gameState]);
 
 
