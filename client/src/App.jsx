@@ -23,7 +23,7 @@ function App() {
 
   return (
     <SocketContext.Provider value={socket}>
-      <div data-theme={localStorage.getItem('theme') || theme} className='bg-primary w-screen h-screen'>
+      <div data-theme={localStorage.getItem('theme') || theme} className='bg-primary w-screen h-[100%]'>
 
         {/* NavBar */}
         <div className="navbar bg-base-100">

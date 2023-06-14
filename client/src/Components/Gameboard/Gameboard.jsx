@@ -1,6 +1,5 @@
 import react, {useEffect, useState, userRef, useContext} from 'react';
 import Game from './Game.jsx'
-import Chat from '../Chat.jsx'
 import axios from 'axios';
 import { SocketContext } from '../../socket.js';
 import ClueView from '../Clue/ClueView.jsx';
@@ -14,7 +13,6 @@ export default function Gameboard() {
   return (<>
     <Game/>
     <ClueView />
-    <Chat />
   </>)
 
 }
