@@ -1,7 +1,6 @@
 import react, {useEffect, useState, userRef, useContext} from 'react';
 import { SocketContext } from '../../socket.js';
 import Cards from './Cards.jsx';
-import ClueView from '../Clue/ClueView.jsx';
 
 export default function Game(){
   const socket = useContext(SocketContext);
@@ -24,10 +23,6 @@ export default function Game(){
     <div className="bg-red-700 flex flex-col items-center ">
       {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
     </div>
-    {/*
-        TO DO: Make the editor prop below dependent on whether current team === this player's team
-    */}
-    <ClueView roomId={gameState.roomId} currentTeam={gameState.currentTeam} editor={ isSpymaster } />
     </>
   }
 }
