@@ -43,11 +43,6 @@ io.on("connection", (socket) => {
     io.to(data.roomId.toString()).emit('message', data)
   })
 
-  socket.on('modifyGameState', (data) => {
-    redisClient.set(data.roomID, JSON.stringify(data));
-    io.to(data.roomID).emit("gameState", data);
-  })
-
 
   socket.on("initRoom", (data) => {
     socket.join(data.roomID)
