@@ -84,6 +84,36 @@ io.on("connection", (socket) => {
     io.to(roomId).emit('clue', clue, clueNumber);
   });
 
+  socket.on('updateTeam', (roomID, teamInfo) => {
+    // console.log('updateTeam: ', teamInfo)
+
+    // retrieve game state from Redis database
+    redisClient.get(roomID)
+      .then(gameState => {
+        gameState = JSON.parse(gameState);
+        // console.log('Before update: ', gameState);
+
+        // update team members
+        const teamObj = gameState[`team_${teamInfo.team}_members`] || {};
+        teamObj[teamInfo.userID] = teamInfo.user;
+
+        // update team spymaster
+        if (teamInfo.role === 'spymaster') {
+          const spymaster = gameState[`team_${teamInfo.team}_spymaster`] || [];
+          spymaster[0] = teamInfo.userID;
+          spymaster[1] = teamInfo.user;
+        }
+
+        // console.log('after update: ', gameState);
+        // update database
+        redisClient.set(roomID, JSON.stringify(gameState));
+
+        // send updated gameState back to clients
+        io.to(roomID).emit("gameState", gameState);
+      })
+
+  })
+
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
     redisClient.get(currentRoomId)
@@ -126,30 +156,6 @@ io.on("connection", (socket) => {
 
   // })
 
-  // socket.on("initRoom", (data) => {
-  //   socket.join(data.roomID);
-
-  //   redisClient.get(data.roomID).then((result) => {
-  //     // console.log(result);
-  //     if (result === null) {
-  //       console.log('Created a new room with id :', data.roomID)
-  //       wordsRoutes
-  //         .initGameState(data)
-  //         .then((gameState) => {
-  //           gameState.players[data.userID] = data.user;
-  //           redisClient.set(data.roomID, JSON.stringify(gameState));
-  //           io.to(data.roomID).emit("gameState", gameState);
-  //         })
-  //         .catch((err) => console.log(err));
-  //     } else {
-  //       console.log('Return game state in room with id :', data.roomID)
-  //       const gameState = JSON.parse(result);
-  //       gameState.players[data.userID] = data.user;
-  //       redisClient.set(data.roomID, JSON.stringify(gameState));
-  //       io.to(data.roomID).emit("gameState", gameState);
-  //     }
-  //   });
-  // });
 
 
 

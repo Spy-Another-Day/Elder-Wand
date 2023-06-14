@@ -41,11 +41,13 @@ const RoomPage = () => {
     setStage(stages[nextIndex]);
   }
 
+  // console.log('gameState in RoomPage:', gameState)
+
 
   return (
     <GameStateContext.Provider value={gameState}>
       {stage === 'init' && (
-      <GameSetup nextStage={nextStage} setGameState={setGameState}/>
+         <GameSetup nextStage={nextStage} />
       )}
       {stage === 'play' && (<Gameboard />)}
       {stage === 'result' && (<Gameboard />)}
