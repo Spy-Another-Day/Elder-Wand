@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom"
 import { SocketContext } from '../socket.js'
 import uuid4 from 'uuid4';
-import Chat from '../components/Chat.jsx'
+
 
 const LandingPage = () => {
   const socket = useContext(SocketContext);
@@ -54,7 +54,7 @@ const LandingPage = () => {
   }
 
   return (
-    <div className=" container h-5/6 max-w-6xl mx-auto my-12 px-8">
+    <div className=" container h-auto max-w-6xl mx-auto mt-[15%] px-8">
 
       <div className="relative block md:flex items-center space-x-4 h-full">
         <div className="w-full md:w-1/2 relative rounded shadow-lg overflow-hidden py-8">

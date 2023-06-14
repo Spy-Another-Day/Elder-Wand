@@ -1,9 +1,11 @@
 import react, {useEffect, useState, userRef, useContext} from 'react';
 import { SocketContext } from '../../socket.js';
+import { GameStateContext } from '../Context.js'
 import Cards from './Cards.jsx';
 import ClueView from '../Clue/ClueView.jsx';
-import { GameStateContext } from '../Context.js'
-import Scoreboard from '../Scoreboard';
+import GameInfo from '../GameInformation/GameInfo';
+import Chat from '../GameInformation/Chat.jsx'
+import GameLog from '../GameInformation/GameLog.jsx'
 
 export default function Game(){
   const socket = useContext(SocketContext);
@@ -22,9 +24,13 @@ export default function Game(){
   }
   else {
     return <>
-      <Scoreboard />
-    <div className="bg-red-700 flex flex-col items-center ">
-      {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
+    <GameInfo />
+    <div className="flex justify-evenly mt-2 h-[54%]">
+      <GameLog />
+      <div className="bg-primary flex flex-col items-center h-[10vh]">
+        {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
+      </div>
+      <Chat />
     </div>
     </>
   }

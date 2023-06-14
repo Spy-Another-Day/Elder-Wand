@@ -82,7 +82,7 @@ const GameSetup = ({ nextStage }) => {
   // console.log('gameState in GameSetup:', gameState)
 
   return (
-    <div className="container flex flex-col h-5/6 max-w-6xl mx-auto my-12 px-8">
+    <div className="container flex flex-col h-[60%] max-w-6xl mx-auto my-12 px-8">
       <div className="relative block h-2/3 md:flex items-center space-x-8 my-8">
 
         {/* TEAM 1 */}

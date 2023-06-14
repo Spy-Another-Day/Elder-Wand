@@ -16,7 +16,7 @@ const ClueInput = ({ submitClue }) => {
   }
 
   return (
-    <div className='clue-container p-10'>
+    <div className='clue-container mt-9'>
       <input
         type='text'
         value={clueInput}
