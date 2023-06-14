@@ -1,11 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import { SocketContext } from '../socket.js';
 import { useUser } from "@clerk/clerk-react";
+import { GameStateContext } from '../Components/Context.js'
 
-const GameSetup = ({ nextStage, gameState }) => {
+const GameSetup = ({ nextStage }) => {
   const { user } = useUser();
   const socket = useContext(SocketContext);
   const [modal, setModal] = useState(false);
+  const gameState = useContext(GameStateContext);
 
   const getTotalPlayers = () => {
     if (!gameState.players) return 0;
@@ -18,7 +20,7 @@ const GameSetup = ({ nextStage, gameState }) => {
   }
 
   const updateTeamMember = (userID, team, role) => {
-    console.log('User chooses a team: ', {userID, team, role})
+    // console.log('User chooses a team: ', {userID, team, role})
     // socket.emit('updateTeam', {userID, team, role})
   }
 
@@ -26,7 +28,7 @@ const GameSetup = ({ nextStage, gameState }) => {
     return (<div>Loading...</div>);
   }
 
-  console.log('gameState:', gameState)
+  // console.log('gameState:', gameState)
 
   return (
     <div className="container flex flex-col h-5/6 max-w-6xl mx-auto my-12 px-8">
@@ -78,12 +80,15 @@ const GameSetup = ({ nextStage, gameState }) => {
         </div>
       </div>
 
-      {getTotalUnassigned() === getTotalPlayers() && (
+      <button onClick={() => nextStage("init")}>Start</button>
+
+      {/* {getTotalUnassigned() === getTotalPlayers() && (
         <button onClick={() => nextStage("init")}>Start</button>
-      )}
+      )} */}
 
     </div>
   );
 }
+
 
 export default GameSetup;

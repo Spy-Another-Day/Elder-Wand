@@ -65,6 +65,7 @@ io.on("connection", (socket) => {
           .catch((err) => console.log(err));
       } else {
         var gameState = JSON.parse(result);
+        gameState.connection = gameState.connection || {};
         gameState.connection[socket.id] = socket.id;
         if(gameState.host === undefined) {
           gameState.host = socket.id;
