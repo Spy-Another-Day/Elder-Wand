@@ -14,6 +14,7 @@ export default function Game(){
   const gameState = useContext(GameStateContext);
 
   useEffect(()=>{
+    console.log(gameState.words)
     setCards(gameState.words)
   }, [gameState])
 

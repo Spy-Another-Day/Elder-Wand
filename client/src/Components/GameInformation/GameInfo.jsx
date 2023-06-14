@@ -17,23 +17,27 @@ const GameInfo = () => {
           <p className="mr-5 mt-5 bg-secondary rounded-md p-1">Team 2 Remaining Guesses: {gameState.team_2_guess_goal}</p>
         </div>
         <div className="flex justify-between">
-          <div className="ml-[12.5vw] bg-secondary rounded-md p-1">
-            <p>Team 1:</p>
-            {Object.keys(gameState.team_1_members).map((key) => {
-              return (
-                <p>{gameState.team_1_members[key]}</p>
-              )
-            })}
-            <p>player</p>
+          <div className="flex ml-[4vw] bg-secondary rounded-md p-1">
+            <p>Team 1:&#160;</p>
+            <div className="flex">
+              {Object.keys(gameState.team_1_members).map((key) => {
+                return (
+                  <p>{gameState.team_1_members[key]} &#160;</p>
+                )
+              })}
+              <p>player</p>
+            </div>
           </div>
-          <div className="flex flex-col mr-[13.5vw] bg-secondary rounded-md p-1">
-            <p>Team 2:</p>
-            {Object.keys(gameState.team_2_members).map((key) => {
-              return (
-                <p>{gameState.team_2_members[key]}</p>
-              )
-            })}
-            <p>player</p>
+          <div className="flex mr-[18.2vw] bg-secondary rounded-md p-1">
+            <p>Team 2:&#160;</p>
+            <div className="flex">
+              {Object.keys(gameState.team_2_members).map((key) => {
+                return (
+                  <p>{gameState.team_2_members[key]} &#160;</p>
+                )
+              })}
+              <p>player</p>
+            </div>
           </div>
         </div>
       </div>
