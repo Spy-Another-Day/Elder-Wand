@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
 
 
   socket.on("initRoom", (data) => {
-    socket.join(data.roomID)
+    socket.join(data.roomID);
     currentRoomId = data.roomID;
 
     redisClient.get(data.roomID).then((result) => {
@@ -80,11 +80,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on('clue', (roomId, clue, clueNumber) => {
+    console.log(roomId);
     io.to(roomId).emit('clue', clue, clueNumber);
   });
 
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
+    console.log('leaving', currentRoomId);
     redisClient.get(currentRoomId)
     .then( result => {
 

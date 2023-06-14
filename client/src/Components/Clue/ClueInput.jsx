@@ -32,7 +32,7 @@ const ClueInput = ({ submitClue }) => {
         className='input input-bordered w-40 max-w-xs'
       />
       <input type='button' value='Share' onClick={shareHandler} className='btn'/>
-
+      {alertMessage.show &&
       <div className="badge badge-error gap-2 m-auto">
         <svg className="w-4 h-4 stroke-current hover:border"
           onClick={() => setAlertMessage({show: false, text: ''})}
@@ -40,8 +40,9 @@ const ClueInput = ({ submitClue }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12">
           </path>
         </svg>
-        {alertMessage.show && alertMessage.text}
+        {alertMessage.text}
       </div>
+      }
     </div>
   );
 }

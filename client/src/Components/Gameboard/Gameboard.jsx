@@ -11,7 +11,6 @@ export default function Gameboard() {
   let topic = 'general'
   //fix:running twice
 
-
   return (<>
     <Game/>
     <ClueView />
