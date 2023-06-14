@@ -11,9 +11,9 @@ export const daisyui = {
         secondary: "#030303",
         // red
         accent: "#CA0000",
-        // white
+        // grey
         neutral: "#3F4242",
-        "base-100": "#a7c957",
+        "base-100": "#3F4242",
         // red
         info: "#ff8585",
         // blue

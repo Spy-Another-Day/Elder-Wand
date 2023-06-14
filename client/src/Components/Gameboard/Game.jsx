@@ -9,10 +9,10 @@ import GameLog from '../GameInformation/GameLog.jsx'
 
 export default function Game(){
   const socket = useContext(SocketContext);
-  const [isSpymaster, setIsSpymaster] = useState(true)
+  const [isSpymaster, setIsSpymaster] = useState(false)
+  const [isYourTurn, setIsYourTurn] = useState(true)
   const [cards, setCards] = useState([]);
   const gameState = useContext(GameStateContext);
-
   useEffect(()=>{
     console.log(gameState.words)
     setCards(gameState.words)
@@ -21,18 +21,19 @@ export default function Game(){
   // socket.emit('gameState', gameState)
 
   if(cards.length === 0) {
-    return (<progress></progress>)
-  }
-  else {
-    return <>
-    <GameInfo />
-    <div className="flex justify-evenly mt-2 h-[54%]">
-      <GameLog />
-      <div className="bg-primary flex flex-col items-center h-[10vh]">
-        {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster}/>)}
-      </div>
-      <Chat />
-    </div>
-    </>
+    return <progress/>
+  } else {
+    return (
+      <>
+        <GameInfo />
+        <div className="flex justify-evenly mt-2 h-[54%]">
+          <GameLog />
+          <div className="bg-primary flex flex-col items-center h-[10vh]">
+            {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster} isYourTurn={isYourTurn}/>)}
+          </div>
+          <Chat />
+        </div>
+      </>
+    )
   }
 }
