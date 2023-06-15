@@ -13,9 +13,6 @@ const GameLog = () => {
 
   socket.on("gameLog", data => {
       setLog(data);
-
-
-
   })
 
   useEffect(()=> {
