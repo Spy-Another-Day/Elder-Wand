@@ -40,8 +40,22 @@ io.on("connection", (socket) => {
   io.emit('id', {socketId: socket.id})
 
   socket.on('sendMessage', (data) => {
-    console.log(data)
-    io.to(data.roomId.toString()).emit('message', data)
+    var chat = data.roomId + 'chatLog'
+
+    redisClient.get(chat)
+      .then((result)=>{
+        if (result === null) {
+          var chatLog = []
+          chatLog.push(data.message)
+          redisClient.set(chat, JSON.stringify(chatLog))
+          io.to(data.roomId.toString()).emit('message', chatLog)
+        } else {
+          var chatLog = JSON.parse(result)
+          chatLog.push(data.message)
+          redisClient.set(chat, JSON.stringify(chatLog))
+          io.to(data.roomId.toString()).emit('message', chatLog)
+        }
+    })
   })
 
 

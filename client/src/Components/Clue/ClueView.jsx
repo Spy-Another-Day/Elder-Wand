@@ -44,7 +44,7 @@ const ClueView = () => {
   return(
     !editing
     ?
-    <div className='clue-container p-5'>
+    <div className='clue-container p-5 z-1'>
       <div className='p-5'>{ `${gameState.currentTeam === 'team_1' ? 'Team 1' : 'Team 2'}'s clue is:` }</div>
       <div className='clue p-5 kbd'>{ clue[0] }</div>
       <div className='number p-5 kbd'>{ clue[1] }</div>

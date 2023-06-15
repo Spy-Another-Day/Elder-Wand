@@ -47,9 +47,9 @@ const Chat = () => {
 
   useEffect(()=>{
 
-    const handleMessages = (msg) => {
+    const handleMessages = (msgArr) => {
       // console.log(msg)
-      setMessages(prevMessages => [...prevMessages, msg])
+      setMessages(msgArr)
     }
 
     const handleId =  (data) => {
@@ -95,20 +95,20 @@ const Chat = () => {
 
   if (isLoaded && isSignedIn) {
     return (
-      <div className="w-1/5 flex-col h-12/12 -mt-2">
+      <div className="w-1/5 flex-col h-12/12 -mt-2 z-0">
         <div className="w-12/12 flex justify-center my-3" style={{minHeight: "100%",maxHeight: "45vh"}}>
           <div id="chat" ref={outerRef} className="bg-secondary min-w-full rounded-md pb-1 overflow-y-scroll">
             <ul ref={innerRef}>
               {messages.map((msg, index) => {
                 return (
-                  <div className="w-12/12 p-1 bg-gray-50 rounded-md mt-1 ml-1 mr-1 text-left" key={index}>{user.username}: {msg.message}</div>
+                  <div className="w-12/12 p-1 bg-gray-50 rounded-md mt-1 ml-1 mr-1 text-left" key={index}>{user.username}: {msg}</div>
                 )
               })}
             </ul>
           </div>
         </div>
           <div>
-            <input id="chat-input" autocomplete="off" type="text" placeholder="Enter chat" className="rounded m-auto px-4 py-2 w-12/12" onKeyDown={chatInputOnKeyDown}></input>
+            <input id="chat-input" autoComplete="off" type="text" placeholder="Enter chat" className="rounded m-auto px-4 py-2 w-12/12" onKeyDown={chatInputOnKeyDown}></input>
             <button className="btn btn-neutral ml-2" ref={chatEnterRef} onClick={handleBtnPress}>send</button>
           </div>
       </div>
