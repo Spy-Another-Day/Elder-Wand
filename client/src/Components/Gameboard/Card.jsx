@@ -7,10 +7,11 @@ import { useUser } from "@clerk/clerk-react";
 
 const Card = ({data, isSpymaster, isYourTurn}) => {
   const { user } = useUser();
+  const username = user.username
   const socket = useContext(SocketContext)
   const gameState = useContext(GameStateContext);
   const params = useParams();
-  
+
   const [clickedBy, setClickedBy] = useState([])
   const [selected, setSelected] = useState(false)
 
@@ -22,9 +23,21 @@ const Card = ({data, isSpymaster, isYourTurn}) => {
 
   const handleCardSelected = (selectedWord, whoDidIt) => {
     if (selectedWord === data.word) {
-
+      if(clickedBy.includes(username)) {
+        let gameLog = {};
+        gameLog.roomID = gameState.roomID;
+        gameLog.socketId = socket.id;
+        gameLog.text = `${username} has unselected ${data.word}`
+        socket.emit('gameLog', gameLog)
+      } else {
+        let gameLog = {};
+        gameLog.roomID = gameState.roomID;
+        gameLog.text = `${username} has vote ${data.word}`
+        socket.emit('gameLog', gameLog)
+      }
       setClickedBy((prev) => {
         if (prev.includes(whoDidIt)) {
+
           return prev.filter((name) => name !== whoDidIt);
         } else {
           return [...prev, whoDidIt];
@@ -42,11 +55,18 @@ const Card = ({data, isSpymaster, isYourTurn}) => {
       socket.off('selectedCard', handleCardSelected)
     }
   })
-  socket.on
+
+
+  const lockOnClick = ()=> {
+    var gameLog = {};
+    gameLog.roomID = gameState.roomID;
+    gameLog.text = `${username} has reveal ${data.word}`
+    socket.emit('gameLog', gameLog)
+  }
 
   if (gameState.team_1_spymaster[1] === user.username || gameState.team_2_spymaster[1] === user.username) {
     return (
-      <div 
+      <div
         className={`btn m-1 w-40 h-24 flex flex-col cursor-default ${
           data.belongsTo === 'assassin'
           ? 'btn-secondary'
@@ -59,7 +79,7 @@ const Card = ({data, isSpymaster, isYourTurn}) => {
           : 'btn-neutral'}
           `}
       >
-        {selected ? <div className='bg-green-500 flex flex-col'> 
+        {selected ? <div className='bg-green-500 flex flex-col'>
           {clickedBy.map((name, index) => (
             <p key={index}>{name}</p>
           ))}
@@ -69,17 +89,17 @@ const Card = ({data, isSpymaster, isYourTurn}) => {
     )
   } else if (isSpymaster === false) {
     return (
-      <div 
+      <div
         className={`btn btn-neutral m-1 w-40 h-24 flex flex-col indicator`}
       >
-        {selected ? <div className='bg-accent flex flex-col'> 
+        {selected ? <div className='bg-accent flex flex-col'>
           {clickedBy.map((name, index) => (
             <p key={index}>{name}</p>
           ))}
         </div> : null}
 
-        {isYourTurn === true ? <div className='flex w-min absolute indicator-item pr-8 pt-8'> 
-          <i onClick={() => {console.log(data.word, 'LOCKED IN')}} className="fa-solid fa-lock"></i>
+        {isYourTurn === true ? <div className='flex w-min absolute indicator-item pr-8 pt-8'>
+          <i onClick={lockOnClick} className="fa-solid fa-lock"></i>
         </div> : null}
 
         <p onClick={() => {handleCardClicked(data)}}>{data.word}</p>

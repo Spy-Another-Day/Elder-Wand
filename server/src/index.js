@@ -115,7 +115,25 @@ io.on("connection", (socket) => {
   })
 
   socket.on("gameLog", data => {
-    io.to(data.roomID).emit('gameLog', data.text);
+    var roomLog = data.roomID + 'gameLog';
+
+    redisClient.get(roomLog)
+    .then(result => {
+      if (result=== null) {
+        var gameLog = [];
+        gameLog.push(data.text)
+        redisClient.set(roomLog, JSON.stringify(gameLog))
+        io.to(data.roomID).emit('gameLog', gameLog);
+      }
+      else{
+        var gameLog = JSON.parse(result);
+        gameLog.push(data.text);
+        redisClient.set(roomLog, JSON.stringify(gameLog))
+        io.to(data.roomID).emit('gameLog', gameLog);
+      }
+    })
+
+
   })
 
   socket.on("disconnect", (data) => {
