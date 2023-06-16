@@ -26,7 +26,6 @@ const GameSetup = () => {
   // his init teamInfo should depend on the gameState
 
   useEffect(() => {
-    console.log(gameState)
     if (gameState.team_1_members && gameState.team_2_members) {
       const result = [[], [], []];
 
@@ -54,7 +53,6 @@ const GameSetup = () => {
   }, [gameState])
 
   const handleClickTeam = (num) => {
-    console.log(teamInfo.team)
     if (teamInfo.team === undefined) {
       setTeamInfo({ ...teamInfo, ["team"]: num })
       setModal(true)
@@ -123,7 +121,7 @@ const GameSetup = () => {
       <div className="relative block h-2/3 md:flex items-center space-x-8 my-8">
 
         {/* TEAM 1 */}
-        <div onClick={() => {handleClickTeam(1); console.log('asdasdas')}}
+        <div onClick={() => handleClickTeam(1)}
           className="relative w-full h-full md:w-1/2 rounded-3xl bg-neutral
         shadow-lg overflow-hidden py-8 cursor-pointer hover:bg-red-500 ">
           <div><h1>Red Team</h1></div>
