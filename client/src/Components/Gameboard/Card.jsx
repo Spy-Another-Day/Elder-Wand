@@ -3,7 +3,7 @@ import { SocketContext } from '../../socket'
 import { GameStateContext } from '../Context';
 import { useParams } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
-
+import axios from 'axios'
 
 const Card = ({data, rowIndex, colIndex}) => {
   const { user } = useUser();
@@ -22,7 +22,7 @@ const Card = ({data, rowIndex, colIndex}) => {
   }
 
   const handleCardSelected = (selectedWord, whoDidIt) => {
-    
+
     if (selectedWord === data.word) {
       if(clickedBy.includes(username)) {
         let gameLog = {};
@@ -30,7 +30,7 @@ const Card = ({data, rowIndex, colIndex}) => {
         gameLog.socketId = socket.id;
         gameLog.text = `${username} has unselected ${data.word}`
         socket.emit('gameLog', gameLog)
-        
+
       } else {
         if(whoDidIt === username){
           let gameLog = {};
@@ -39,7 +39,7 @@ const Card = ({data, rowIndex, colIndex}) => {
           gameLog.text = `${username} has voted ${data.word}`
           socket.emit('gameLog', gameLog)
         }
-        
+
       }
 
       setClickedBy((prev) => {
@@ -70,14 +70,14 @@ const Card = ({data, rowIndex, colIndex}) => {
       temp[`${temp.words[rowIndex][colIndex].belongsTo}_score`] += temp.score;
       temp.score *= 2;
       temp[`${temp.words[rowIndex][colIndex].belongsTo}_guess_goal`]--;
-
+      temp[`${temp.words[rowIndex][colIndex].belongsTo}_guessed`]++;
       if (temp.remainingGuesses === -1) {
         gameState.currentTeam === gameState.team_1 ? temp.currentTeam = gameState.team_2 : temp.currentTeam = gameState.team_1;
         temp.remainingGuesses = '?';
         temp.clue = 'waiting on clue...'
       }
-      
-      
+
+
 
 
       if(temp[`${gameState.currentTeam}_guess_goal`] === 0) {
@@ -86,22 +86,24 @@ const Card = ({data, rowIndex, colIndex}) => {
         temp.teamWon = temp.curretTeam
         temp.stage = 'result'
         temp.winner_score = temp[`${temp.currentTeam}_score`];
+
+        axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp);
       }
-      
-      
+
+
       temp.remainingGuesses = Number.parseInt(temp.remainingGuesses) - 1;
 
       socket.emit('gameState', temp)
       lockOnClick()
-      
+
     } else if (temp.words[rowIndex][colIndex].belongsTo === 'bystander') {
       temp.score = 1;
       temp.clue = 'waiting for clue...'
       temp.remainingGuesses = '?';
-      gameState.currentTeam === gameState.team_1 ? temp.currentTeam = gameState.team_2 : temp.currentTeam = gameState.team_1 
+      gameState.currentTeam === gameState.team_1 ? temp.currentTeam = gameState.team_2 : temp.currentTeam = gameState.team_1
       socket.emit('gameState', temp)
       lockOnClick()
-      
+
     } else if (temp.words[rowIndex][colIndex].belongsTo === 'assassin') {
       // end game
       // update gameState.stage to 'result'
@@ -111,7 +113,7 @@ const Card = ({data, rowIndex, colIndex}) => {
       temp.stage = 'result';
       temp.teamWon = gameState.currentTeam === 'team_1' ? 'team_2' : 'team_1';
       temp.winReason = 'assassinated'
-
+      axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp);
       // let gameLog = {};
       // gameLog.roomID = gameState.roomID;
       // let sp = temp[`${temp.currentTeam}_spymaster`]
@@ -124,8 +126,8 @@ const Card = ({data, rowIndex, colIndex}) => {
       temp.clue = 'waiting for clue...';
       temp.remainingGuesses = '?';
       temp[`${temp.words[rowIndex][colIndex].belongsTo}_guess_goal`] -= 1;
-
-      gameState.currentTeam === gameState.team_1 ? temp.currentTeam = gameState.team_2 : temp.currentTeam = gameState.team_1 
+      temp[`${temp.words[rowIndex][colIndex].belongsTo}_guessed`]++;
+      gameState.currentTeam === gameState.team_1 ? temp.currentTeam = gameState.team_2 : temp.currentTeam = gameState.team_1
       temp[`${temp.currentTeam}_score`] += temp.score;
 
       temp.score = 1;
@@ -135,12 +137,13 @@ const Card = ({data, rowIndex, colIndex}) => {
         temp.winReason = 'all code revealed (last one by opponent)'
         temp.teamWon = temp.words[rowIndex][colIndex].belongsTo
         temp.stage = 'result'
+        axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp);
       }
 
       socket.emit('gameState', temp)
       lockOnClick()
     }
-    
+
   }
 
   useEffect(() => {
@@ -155,7 +158,7 @@ const Card = ({data, rowIndex, colIndex}) => {
     let gameLog = {};
     gameLog.roomID = gameState.roomID;
     gameLog.text = `${username} has revealed ${data.word}`
-    
+
     socket.emit('gameLog', gameLog)
   }
 
@@ -181,7 +184,7 @@ const Card = ({data, rowIndex, colIndex}) => {
         </div> : null}
 
         <p onClick={() => {handleCardClicked(data)}}>{data.word}</p>
-        {data.isTouched ? (<div className='flex w-min indicator-bottom '> 
+        {data.isTouched ? (<div className='flex w-min indicator-bottom '>
           <i className="fa-solid fa-user-secret"></i>
         </div>) : null}
 
@@ -189,7 +192,7 @@ const Card = ({data, rowIndex, colIndex}) => {
     )
   } else if (gameState.team_1_spymaster[1] !== user.username || gameState.team_2_spymaster[1] !== user.username) {
     return (
-      <div 
+      <div
         className={`btn ${
           data.isTouched ? data.belongsTo === 'assassin'
           ? 'btn-secondary'
@@ -208,14 +211,14 @@ const Card = ({data, rowIndex, colIndex}) => {
           ))}
         </div> : null}
 
-        
-        {Object.keys(gameState[`${gameState.currentTeam}_members`]).includes(user.id) && data.isTouched === false ? <div className='flex w-min absolute indicator-item pr-8 pt-8'> 
+
+        {Object.keys(gameState[`${gameState.currentTeam}_members`]).includes(user.id) && data.isTouched === false ? <div className='flex w-min absolute indicator-item pr-8 pt-8'>
           <i onClick={handleLockClick} className="fa-solid fa-lock"></i>
         </div> : null}
 
         <p onClick={() => {handleCardClicked(data)}}>{data.word}</p>
 
-        {data.isTouched ? (<div className='flex w-min indicator-bottom'> 
+        {data.isTouched ? (<div className='flex w-min indicator-bottom'>
           <i className="fa-solid fa-user-secret"></i>
         </div>) : null}
       </div>

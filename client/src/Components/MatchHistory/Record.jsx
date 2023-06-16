@@ -44,7 +44,7 @@ return(<>
     <div>
       <h1>Team {team_1}</h1>
 
-      {startUpTeam === team_1 ? '(team guess first)': '(team guess second)'}
+      {startUpTeam === team_1 ? '(Start up team)': ''}
     </div>
     <div>
       {teamWon === team_1 ? (<div>Win</div>) :(<div>Lose</div>) }
@@ -131,7 +131,7 @@ return(<>
     <div className="grid flex-grow  card  rounded-box place-items-center bg-success">
       <div>
         <h1>Team {team_2}</h1>
-        <h2>{startUpTeam === team_2 ? '(team guess first)': '(team guess second)'}</h2>
+        <h2>{startUpTeam === team_2 ? '(Start up team)': ''}</h2>
         </div>
         <div>
       {teamWon === team_2 ? (<div>Win</div>) :(<div>Lose</div>) }
