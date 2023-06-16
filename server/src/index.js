@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on('resetVote', (roomID) => {
-    
+
     io.to(roomID).emit('resetVote');
 
     }
@@ -138,6 +138,14 @@ io.on("connection", (socket) => {
           spymaster[1] = teamInfo.user;
         }
 
+        // handle switch teams
+        if (teamInfo.change) {
+          if (teamInfo.role === 'spymaster') {
+            gameState[`team_${teamInfo.team}_spymaster`] = []
+          }
+          delete gameState[`team_${teamInfo.team}_members`][teamInfo.userID]
+        }
+
         // update database
         redisClient.set(roomID, JSON.stringify(gameState));
 
@@ -207,7 +215,7 @@ io.on("connection", (socket) => {
     .catch(err => console.log(err))
   })
 
-  
+
   socket.on('gameState', data => {
     redisClient.set(data.roomID, JSON.stringify(data));
     io.to(data.roomID).emit('gameState', data);

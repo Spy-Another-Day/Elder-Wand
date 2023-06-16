@@ -10,21 +10,23 @@ const GameSetup = () => {
   const gameState = useContext(GameStateContext);
 
 
-
   const [modal, setModal] = useState(false);
   const [teamOneMembers, setTeamOneMembers] = useState([]);
   const [teamTwoMembers, setTeamTwoMembers] = useState([]);
   const [undecidedPlayers, setUndecidedPlayers] = useState([]);
+  const [hasChosen, setHasChosen] = useState(false)
   const [teamInfo, setTeamInfo] = useState({
     "userID": user.id,
     "user": user.username,
     "team": undefined,
-    "role": undefined
+    "role": undefined,
+    "change": false
   })
   // NOTE: if a user left the game and come back,
   // his init teamInfo should depend on the gameState
 
   useEffect(() => {
+    console.log(gameState)
     if (gameState.team_1_members && gameState.team_2_members) {
       const result = [[], [], []];
 
@@ -52,6 +54,7 @@ const GameSetup = () => {
   }, [gameState])
 
   const handleClickTeam = (num) => {
+    console.log(teamInfo.team)
     if (teamInfo.team === undefined) {
       setTeamInfo({ ...teamInfo, ["team"]: num })
       setModal(true)
@@ -89,11 +92,20 @@ const GameSetup = () => {
     return true;
   }
 
+  const handleSwitchTeams = () => {
+    const info = { ...teamInfo, ['change']: true}
+    setTeamInfo(info)
+    socket.emit('updateTeam', gameState.roomID, info)
+    setTeamInfo({ ...teamInfo, ['role']: undefined, ['team']: undefined, ['change']: false})
+    setHasChosen(false)
+  }
+
   const updateTeamMember = (role) => {
     setModal(false);
     const info = { ...teamInfo, ["role"]: role };
     setTeamInfo(info);
     socket.emit('updateTeam', gameState.roomID, info)
+    setHasChosen(true)
   }
 
   const nextStage = (nextStage) => {
@@ -111,7 +123,7 @@ const GameSetup = () => {
       <div className="relative block h-2/3 md:flex items-center space-x-8 my-8">
 
         {/* TEAM 1 */}
-        <div onClick={() => handleClickTeam(1)}
+        <div onClick={() => {handleClickTeam(1); console.log('asdasdas')}}
           className="relative w-full h-full md:w-1/2 rounded-3xl bg-neutral
         shadow-lg overflow-hidden py-8 cursor-pointer hover:bg-red-500 ">
           <div><h1>Red Team</h1></div>
@@ -218,6 +230,7 @@ const GameSetup = () => {
               })}
             </div>
           )}
+          {hasChosen ? <button onClick={(e)=>{e.preventDefault(); handleSwitchTeams()}}>switch teams</button> : null}
 
           {undecidedPlayers.length === 0 && (
             <div className="flex flex-col">

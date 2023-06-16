@@ -9,7 +9,7 @@ import { GameStateContext } from '../Components/Context.js'
 const RoomPage = () => {
   const socket = useContext(SocketContext);
   const params = useParams();
-  let topic = "general";
+  let topic = "Technology";
   const { user } = useUser();
 
   // TODO: there should be a better way to determine the stage of the game
@@ -30,7 +30,7 @@ const RoomPage = () => {
 
   socket.on('gameState', data => {
     setGameState(data)
-    
+
   });
 
   // const nextStage = (currentStage) => {
