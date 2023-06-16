@@ -288,6 +288,14 @@ app.get("/", (req, res) => {
   res.sendFile(Path.join(__dirname, '../../client/dist, index.html'))
 });
 
+app.get('/leaderboard', (req, res) => {
+  res.sendFile(Path.join(__dirname, '../../client/dist', 'index.html'))
+})
+
+app.get('/room/:id', (req, res) => {
+  res.sendFile(Path.join(__dirname, '../../client/dist', 'index.html'))
+})
+
 app.get("/user/:username", (req, res) => {
   usersRoutes.getUser(req, res);
 });

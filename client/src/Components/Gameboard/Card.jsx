@@ -207,9 +207,11 @@ const Card = ({data, rowIndex, colIndex}) => {
         </div> : null}
 
         <p className='font-bold'>{data.word}</p>
-        {data.isTouched ? (<div className='flex w-min indicator-bottom '>
+        {data.isTouched ? (data.belongsTo === 'bystander' ? (<div className='flex w-min indicator-bottom '>
+          <i className="fa-solid fa-user"></i>
+        </div>) : (<div className='flex w-min indicator-bottom '>
           <i className="fa-solid fa-user-secret"></i>
-        </div>) : null}
+        </div>)) : null}
 
       </div>
     )
