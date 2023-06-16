@@ -10,6 +10,7 @@ const LandingPage = () => {
   const [roomID, setRoomID] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [inputError, setInputError] = useState({state: false, message: ""});
+  const [shareLink, setShareLink] = useState(false);
 
   const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ const LandingPage = () => {
     if (redirect) {
       navigate(`/room/${roomID}`)
     }
-  })
+  }, [redirect])
 
   const handleChangeID = (e) => {
     setRoomID(e.target.value);
@@ -28,8 +29,13 @@ const LandingPage = () => {
     socket.room = roomId;
     socket.connect();
     setRoomID(roomId);
-    setRedirect(true);
+    // setRedirect(true);
+    setShareLink(true);
   }
+
+  const handleEnterRoom = () => {
+    setRedirect(true);
+ }
 
   const handleJoinRoom = () => {
     if (roomID.length < 1) {
@@ -56,12 +62,27 @@ const LandingPage = () => {
   return (
     <div className=" container h-auto max-w-6xl mx-auto mt-[15%] px-8">
 
-      <div className="relative block md:flex items-center space-x-4 h-full">
-        <div className="w-full bg-primary md:w-1/2 relative rounded shadow-lg overflow-hidden py-8">
-          <button className="btn btn-neutral" onClick={handleCreateRoom}>Create a new Room</button>
-        </div>
+      <div className="relative block md:flex items-center space-x-4">
 
-        <div className="flex bg-primary flex-col w-full md:w-1/2 relative rounded shadow-lg overflow-hidden space-y-4 py-8">
+      {shareLink || (
+          <div className="w-full bg-primary md:w-1/2 relative rounded-3xl shadow-lg overflow-hidden py-14">
+            <button className="btn btn-neutral" onClick={handleCreateRoom}>Create a new Room</button>
+          </div>
+        )}
+
+
+        {shareLink && (
+          <div className="w-full bg-primary md:w-1/2 relative rounded-3xl shadow-lg overflow-hidden py-5 space-y-2">
+
+            <div className="text-secondary">Room created. Share the link to your friends!</div>
+            <input onChange={handleChangeID} value={`${window.location.href}room/${roomID}`}
+              type="text" placeholder="Enter URL or Room ID" className="rounded-lg m-auto px-4 py-2 w-5/6" />
+            <button className="btn btn-neutral" onClick={handleEnterRoom}>Enter Room</button>
+          </div>
+        )}
+
+        <div className="flex bg-neutral flex-col w-full md:w-1/2 relative rounded-3xl shadow-lg overflow-hidden 
+        space-y-4 py-8 px-4">
 
           <input onChange={handleChangeID}
             type="text" placeholder="Enter URL or Room ID" className="rounded m-auto px-4 py-2 w-full" />
@@ -78,7 +99,7 @@ const LandingPage = () => {
             </div>
           )}
 
-          <button className="btn btn-neutral" onClick={handleJoinRoom}>Join a Room</button>
+          <button className="btn btn-base-100" onClick={handleJoinRoom}>Join a Room</button>
         </div>
 
       </div>

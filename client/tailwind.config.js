@@ -6,13 +6,13 @@ export const daisyui = {
     {
       Spies: {
         // white
-        primary: "#FCFCFB",
+        primary: "#ff8787",
         // black
-        secondary: "#030303",
+        secondary: "#343a40",
         // red
-        accent: "#CA0000",
+        accent: "#868e96",
         // grey
-        neutral: "#3F4242",
+        neutral: "#eeeeee",
         "base-100": "#3F4242",
         // red
         info: "#ff8585",
@@ -21,57 +21,16 @@ export const daisyui = {
         // yellow
         warning: "#f8ff7a",
         // green
-        error: "#52a15a"
+        error: "#bc4749"
       },
-      Stigander: {
-        // green
-        primary: "#6a994e",
-        // darker green
-        secondary: "#386641",
-        // red
-        accent: "#bc4749",
-        // cream / parchment / off white
-        neutral: "#f2e8cf",
-        // lighter green
-        "base-100": "#a7c957",
-        // orange
-        info: "#f4a259",
-        // yellow
-        success: "#f4e285",
-        // another green
-        warning: "#8cb369",
-        // a blueish green
-        error: "#5b8e7d"
-      },
-      Zaris: {
-        // green
-        primary: "#ced4da",
-        // darker green
-        secondary: "#343a40",
-        // black
-        accent: "#1e1e1e",
-        // white
-        neutral: "#ffffff",
-        // off white
-        "base-100": "#e9ecef",
-        // red
-        info: "#ffc9c9",
-        // orange
-        success: "#ffd8a8",
-        // yellow
-        warning: "#eeffaa",
-        // purple
-        error: "#d0bfff"
-      }
     },
     'business',
-    "light",
-    "retro",
     "dracula",
-    "aqua",
     "cyberpunk",
-    "dark",
-    "coffee"
+    "coffee",
+    'pastel',
+    'luxury',
+    'emerald'
   ]
 };
 

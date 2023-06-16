@@ -59,9 +59,13 @@ const Card = ({data, rowIndex, colIndex}) => {
   })
   const handleLockClick = () => {
     if(gameState.remainingGuesses === '?') {
+      let gl = {}
+      gl.roomID = gameState.roomID
+      
+      gl.text = `Spymaster: Be patient ${username}!`
+      socket.emit("gameLog", gl)
       return;
     }
-
     socket.emit('resetVote', gameState.roomID)
     let temp = gameState;
     temp.words[rowIndex][colIndex].isTouched = true;
@@ -87,7 +91,15 @@ const Card = ({data, rowIndex, colIndex}) => {
         temp.stage = 'result'
         temp.winner_score = temp[`${temp.currentTeam}_score`];
 
-        axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp);
+        let gl = {}
+        gl.roomID = gameState.roomID
+        
+        gl.text = `${gameState.currentTeam} is the winner!`
+        socket.emit("gameLog", gl)
+
+        axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp)
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
       }
 
 
@@ -113,12 +125,15 @@ const Card = ({data, rowIndex, colIndex}) => {
       temp.stage = 'result';
       temp.teamWon = gameState.currentTeam === 'team_1' ? 'team_2' : 'team_1';
       temp.winReason = 'assassinated'
-      axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp);
-      // let gameLog = {};
-      // gameLog.roomID = gameState.roomID;
-      // let sp = temp[`${temp.currentTeam}_spymaster`]
-      // gameLog.text = `${sp} has been assassinated`
-      // socket.emit('gameLog', gameLog)
+      axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp)
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
+
+      let gl = {}
+      gl.roomID = gameState.roomID
+      var name = gameState[`${gameState.currentTeam}_spymaster`][1]
+      gl.text = `${gl} has been assassinated`
+      socket.emit("gameLog", gl)
 
       socket.emit('gameState', temp)
       lockOnClick()
@@ -137,7 +152,15 @@ const Card = ({data, rowIndex, colIndex}) => {
         temp.winReason = 'all code revealed (last one by opponent)'
         temp.teamWon = temp.words[rowIndex][colIndex].belongsTo
         temp.stage = 'result'
-        axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp);
+
+        let gl = {}
+        gl.roomID = gameState.roomID
+        
+        gl.text = `${temp.words[rowIndex][colIndex].belongsTo} is the winner!`
+        socket.emit("gameLog", gl)
+        axios.post(`${import.meta.env.VITE_SERVER_URL}/history`, temp)
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
       }
 
       socket.emit('gameState', temp)
@@ -165,25 +188,25 @@ const Card = ({data, rowIndex, colIndex}) => {
   if (gameState.team_1_spymaster[0] === user.id || gameState.team_2_spymaster[0] === user.id) {
     return (
       <div
-        className={`btn m-1 w-40 h-24 flex flex-col cursor-default ${
+        className={`btn m-1 w-40 h-24 flex flex-col border-2 ${gameState.currentTeam === 'team_1' ? 'border-secondary' : 'border-primary'} cursor-default ${
           data.belongsTo === 'assassin'
-          ? 'btn-secondary'
-          : data.belongsTo === 'bystander'
           ? 'btn-warning'
+          : data.belongsTo === 'bystander'
+          ? 'btn-accent'
           : data.belongsTo === 'team_1'
-          ? 'btn-info'
+          ? 'btn-primary'
           : data.belongsTo === 'team_2'
-          ? 'btn-success'
+          ? 'btn-secondary'
           : 'btn-neutral'}
           `}
       >
-        {selected ? <div className={`${gameState.currentTeam === 'team_1' ? 'bg-info' : 'bg-success'} flex flex-col`}>
+        {selected ? <div className={`font-light flex flex-col`}>
           {clickedBy.map((name, index) => (
             <p key={index}>{name}</p>
           ))}
         </div> : null}
 
-        <p onClick={() => {handleCardClicked(data)}}>{data.word}</p>
+        <p className='font-bold'>{data.word}</p>
         {data.isTouched ? (<div className='flex w-min indicator-bottom '>
           <i className="fa-solid fa-user-secret"></i>
         </div>) : null}
@@ -193,19 +216,19 @@ const Card = ({data, rowIndex, colIndex}) => {
   } else if (gameState.team_1_spymaster[1] !== user.username || gameState.team_2_spymaster[1] !== user.username) {
     return (
       <div
-        className={`btn ${
+        className={`btn border-2  ${gameState.currentTeam === 'team_1' ? 'border-secondary' : 'border-primary'} ${
           data.isTouched ? data.belongsTo === 'assassin'
-          ? 'btn-secondary'
-          : data.belongsTo === 'bystander'
           ? 'btn-warning'
+          : data.belongsTo === 'bystander'
+          ? 'btn-accent'
           : data.belongsTo === 'team_1'
-          ? 'btn-info'
+          ? 'btn-primary'
           : data.belongsTo === 'team_2'
-          ? 'btn-success'
+          ? 'btn-secondary'
           : 'btn-neutral'
           : 'btn-neutral' } m-1 w-40 h-24 flex flex-col indicator`}
       >
-        {selected ? <div className={`${gameState.currentTeam === 'team_1' ? 'bg-info' : 'bg-success'}  flex flex-col`}>
+        {selected ? <div className={`font-light  flex flex-col`}>
           {clickedBy.map((name, index) => (
             <p key={index}>{name}</p>
           ))}
@@ -216,7 +239,7 @@ const Card = ({data, rowIndex, colIndex}) => {
           <i onClick={handleLockClick} className="fa-solid fa-lock"></i>
         </div> : null}
 
-        <p onClick={() => {handleCardClicked(data)}}>{data.word}</p>
+        <p className='font-bold' onClick={() => {handleCardClicked(data)}}>{data.word}</p>
 
         {data.isTouched ? (<div className='flex w-min indicator-bottom'>
           <i className="fa-solid fa-user-secret"></i>

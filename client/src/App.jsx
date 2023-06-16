@@ -3,17 +3,15 @@ import { useState, useContext } from 'react';
 import { SocketContext } from './socket.js';
 import './App.css'
 import { UserButton } from '@clerk/clerk-react';
-import { GameStateContext } from "./Components/Context.js";
 import LandingPage from './Pages/LandingPage'
 import RoomPage from './Pages/RoomPage'
 import IconHome from './assets/IconHome'
 import ErrorPage from './Pages/ErrorPage'
 import MatchHistory from './Components/MatchHistory/MatchHistory'
 
-const themes = ['Spies', 'dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
+const themes = ['Spies', 'dracula', 'cyberpunk', 'business', 'coffee', 'pastel', 'luxury', 'emerald']
 function App() {
 
-  const gameState = useContext(GameStateContext)
   const socket = useContext(SocketContext);
   // console.log(socket)
   const [theme, setTheme] = useState('Spies')
@@ -34,7 +32,7 @@ function App() {
             <a href="/leaderboard" className="btn btn-ghost normal-case text-xl">Leader Board</a>
           </div>
           <div className="flex-1">
-            <a className="btn btn-ghost normal-case text-xl">Spy Another Day</a>
+            <a href="/" className="btn btn-ghost normal-case text-xl">Spy Another Day</a>
           </div>
 
           <div className="flex-none">
@@ -42,7 +40,7 @@ function App() {
             {/* dropdown theme menu */}
             <div className="dropdown dropdown-bottom  dropdown-end z-10 ">
               <label tabIndex={0} className="btn m-1 ml-5">themes</label>
-              <ul tabIndex={0} className="dropdown-content  menu p-2 shadow bg-secondary rounded-box w-52">
+              <ul tabIndex={0} className="dropdown-content  menu p-2 shadow bg-base-100 rounded-box w-52">
                 {themes.map((theme, index) => (
                   <li className="text-neutral" onClick={(e) => { setTheme(e.target.innerText); localStorage.setItem('theme', e.target.innerText) }} key={index}><a>{theme}</a></li>
                 ))}
@@ -166,9 +164,9 @@ export default App
 //     "Interstellar",
 //     "Fight Club",
 //     "Forrest Gump",
-//     "The Shafather",
+//     "The Godfather",
 //     "Star Wars",
-//     "The Godrs",
+//     "Scarface",
 //     "The Dark Knight",
 //     "Back to the Future",
 //     "Gladiator",
@@ -189,7 +187,7 @@ export default App
 //     "Adobe",
 //     "Spotify",
 //     "Samsung",
-//     "Oracle",
+//     "Disney",
 //     "Intel",
 //     "Twitter",
 //     "IBM",
@@ -197,5 +195,45 @@ export default App
 //     "Snapchat",
 //     "Sony",
 //     "Reddit"
+    // "Eiffel Tower",
+    // "Great Wall of China",
+    // "Taj Mahal",
+    // "Machu Picchu",
+    // "Pyramids of Giza",
+    // "Statue of Liberty",
+    // "Sistine Chapel",
+    // "Colosseum",
+    // "Stonehenge",
+    // "Acropolis",
+    // "Grand Canyon",
+    // "Mount Everest",
+    // "Niagara Falls",
+    // "Serengeti National Park",
+    // "Sydney Opera House",
+    // "Hollywood Walk of Fame",
+    // "Red Square",
+    // "Petra",
+    // "Mariana Trench",
+    // "Angkor Wat"
+    // "To Kill a Mockingbird",
+    // "1984",
+    // "Pride and Prejudice",
+    // "The Great Gatsby",
+    // "The Lord of the Rings",
+    // "Harry Potter and the Sorcerer's Stone",
+    // "Moby-Dick",
+    // "The Catcher in the Rye",
+    // "The Hobbit",
+    // "Brave New World",
+    // "The Chronicles of Narnia",
+    // "The Hunger Games",
+    // "The Da Vinci Code",
+    // "Gone with the Wind",
+    // "The Alchemist",
+    // "The Little Prince",
+    // "The Kite Runner",
+    // "Jane Eyre",
+    // "The Odyssey",
+    // "Frankenstein"
 //   ]
 // }

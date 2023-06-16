@@ -2,6 +2,7 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const Path = require('path')
 const http = require("http");
 const { Server, Socket } = require("socket.io");
 const usersRoutes = require("./database/controllers/users.js");
@@ -49,7 +50,7 @@ io.on("connection", (socket) => {
           temp['message'] = data.message
           temp['user'] = data.user
           chatLog = [temp]
-          redisClient.set(chat, JSON.stringify(chatLog))
+          redisClient.set(chat, JSON.stringify(chatLog), {EX: 60*60*24})
           io.to(data.roomId.toString()).emit('message', chatLog)
         } else {
           var chatLog = JSON.parse(result)
@@ -57,7 +58,7 @@ io.on("connection", (socket) => {
           temp['message'] = data.message
           temp['user'] = data.user
           chatLog.push(temp)
-          redisClient.set(chat, JSON.stringify(chatLog))
+          redisClient.set(chat, JSON.stringify(chatLog), {EX: 60*60*24})
           io.to(data.roomId.toString()).emit('message', chatLog)
         }
     })
@@ -94,9 +95,9 @@ io.on("connection", (socket) => {
             gameState.teamWon = '';
             gameState.winReason = '';
             gameState.clue = 'waiting on clue...'
-            gameState.remainingGuesses = 0;
+            gameState.remainingGuesses = '?';
             gameState.players[data.userID] = data.user;
-            redisClient.set(data.roomID, JSON.stringify(gameState));
+            redisClient.set(data.roomID, JSON.stringify(gameState), {EX: 60*60*24});
             io.to(data.roomID).emit("gameState", gameState);
           })
           .catch((err) => console.log(err));
@@ -110,7 +111,7 @@ io.on("connection", (socket) => {
 
         gameState.roomID = data.roomID;
         gameState.players[data.userID] = data.user;
-        redisClient.set(data.roomID, JSON.stringify(gameState));
+        redisClient.set(data.roomID, JSON.stringify(gameState), {EX: 60*60*24});
         io.to(data.roomID).emit("gameState", gameState);
       }
     });
@@ -138,8 +139,15 @@ io.on("connection", (socket) => {
           spymaster[1] = teamInfo.user;
         }
 
+        if (teamInfo.change) {
+          if (teamInfo.role === 'spymaster') {
+            gameState[`team_${teamInfo.team}_spymaster`] = []
+          }
+          delete gameState[`team_${teamInfo.team}_members`][teamInfo.userID]
+        }
+
         // update database
-        redisClient.set(roomID, JSON.stringify(gameState));
+        redisClient.set(roomID, JSON.stringify(gameState), {EX: 60*60*24});
 
         // send updated gameState back to clients
         io.to(roomID).emit("gameState", gameState);
@@ -159,7 +167,7 @@ io.on("connection", (socket) => {
         gameState.stage = nextStage;
 
         // update database
-        redisClient.set(roomID, JSON.stringify(gameState));
+        redisClient.set(roomID, JSON.stringify(gameState), {EX: 60*60*24});
 
         // send updated gameState back to clients
         io.to(roomID).emit("gameState", gameState);
@@ -175,13 +183,13 @@ io.on("connection", (socket) => {
       if (result=== null) {
         var gameLog = [];
         gameLog.push(data.text)
-        redisClient.set(roomLog, JSON.stringify(gameLog))
+        redisClient.set(roomLog, JSON.stringify(gameLog), {EX: 60*60*24})
         io.to(data.roomID).emit('gameLog', gameLog);
       }
       else{
         var gameLog = JSON.parse(result);
         gameLog.push(data.text);
-        redisClient.set(roomLog, JSON.stringify(gameLog))
+        redisClient.set(roomLog, JSON.stringify(gameLog), {EX: 60*60*24})
         io.to(data.roomID).emit('gameLog', gameLog);
       }
     })
@@ -209,7 +217,7 @@ io.on("connection", (socket) => {
 
   
   socket.on('gameState', data => {
-    redisClient.set(data.roomID, JSON.stringify(data));
+    redisClient.set(data.roomID, JSON.stringify(data), {EX: 60*60*24});
     io.to(data.roomID).emit('gameState', data);
   })
 
@@ -225,12 +233,12 @@ io.on("connection", (socket) => {
           gameState.host = undefined
           for(var i in gameState.connection) {
             gameState.host = i;
-            redisClient.set(currentRoomId, JSON.stringify(gameState))
+            redisClient.set(currentRoomId, JSON.stringify(gameState), {EX: 60*60*24})
             io.to(gameState.roomID).emit('gameState', gameState)
             return;
           }
         }
-        redisClient.set(currentRoomId, JSON.stringify(gameState))
+        redisClient.set(currentRoomId, JSON.stringify(gameState), {EX: 60*60*24})
         io.to(gameState.roomID).emit('gameState', gameState)
       })
       .catch(err => console.log(err))
@@ -274,8 +282,10 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger(":method :url :status - :response-time ms"));
 
+app.use(express.static(Path.join(__dirname, '../../client/dist')))
+
 app.get("/", (req, res) => {
-  res.json("Welcome to Blue Ocean! 🤗");
+  res.sendFile(Path.join(__dirname, '../../client/dist, index.html'))
 });
 
 app.get("/user/:username", (req, res) => {
