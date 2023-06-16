@@ -29,6 +29,8 @@ const ClueView = () => {
       temp.currentTeam = 'team_1'
     }
     var data = {}
+    temp.remainingGuesses = '?'
+    temp.clue = 'waiting for clue...'
     data.roomID = gameState.roomID
     data.text = `${username} has switched turn to opponent`
     socket.emit("gameLog", data)
