@@ -5,8 +5,8 @@ module.exports = {
 
   getHistory: (req, res) => {
     var limit = req.query.limit || 30;
-    
-    
+
+
     History.find().sort({winner_score: -1}).limit(limit)
     .then(result => {
       res.status(200).send(result)
@@ -15,7 +15,7 @@ module.exports = {
 
   },
   postHistory: (req, res) => {
-    const {team_1_guessed, team_2_guessed, team_1_members, team_2_members, team_1_spymaster, team_2_spymaster, words, roomID, startUpTeam, teamWon, topic, team_1, team_2, team_1_score, team_2_score, winReason} = req.body;
+    const {team_1_guessed, team_2_guessed, team_1_members, team_2_members, team_1_spymaster, team_2_spymaster, words, roomID, startUpTeam, teamWon, topic, team_1, team_2, team_1_score, team_2_score, winReason, winner_score} = req.body;
     var team1members = [];
     var team2members = [];
 
@@ -40,7 +40,8 @@ module.exports = {
                 roomID:roomID,
                 team_1_score: team_1_score,
                 team_2_score: team_2_score,
-                winReason: winReason
+                winReason: winReason,
+                winner_score:winner_score
               }
 
     History.create(data)
