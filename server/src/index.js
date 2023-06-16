@@ -282,10 +282,10 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger(":method :url :status - :response-time ms"));
 
-app.use(express.static(Path.join(__dirname, '../../client/dist/index.html')))
+app.use(express.static(Path.join(__dirname, '../../client/dist')))
 
 app.get("/", (req, res) => {
-  res.json("Welcome to Blue Ocean! 🤗");
+  res.sendFile(Path.join(__dirname, '../../client/dist, index.html'))
 });
 
 app.get("/user/:username", (req, res) => {
