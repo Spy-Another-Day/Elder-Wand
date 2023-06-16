@@ -93,19 +93,19 @@ const Chat = () => {
     return (
         <div className="w-1/5 flex-col  h-full -mt-2 z-0">
           <div className="w-12/12 flex justify-center my-3 min-h-full max-h-[45vh]">
-            <div id="chat" ref={outerRef} className="bg-secondary min-w-full rounded-md pb-1 overflow-y-scroll">
+            <div id="chat" ref={outerRef} className="bg-accent min-w-full rounded-md pb-1 overflow-y-scroll">
               <ul ref={innerRef}>
                 {messages.map((msg, index) => {
                   return (
-                    <div className="w-12/12 p-1 text-neutral bg-gray-50 rounded-md mt-1 ml-1 mr-1 text-left" key={index}>{msg.user}: {msg.message}</div>
+                    <div className="w-12/12 p-1 text-base-100 bg-gray-50 rounded-md mt-1 ml-1 mr-1 text-left" key={index}>{msg.user}: {msg.message}</div>
                   )
                 })}
               </ul>
             </div>
           </div>
             <div className=''>
-              <input id="chat-input" autoComplete="off" type="text" placeholder="Enter chat" className="rounded m-auto px-4 py-2 w-12/12" onKeyDown={chatInputOnKeyDown}></input>
-              <button className="btn btn-neutral ml-2" ref={chatEnterRef} onClick={handleBtnPress}>send</button>
+              <input id="chat-input" autoComplete="off" type="text" placeholder="Enter chat" className="rounded bg-neutral text-base-100 m-auto px-4 py-2 w-12/12" onKeyDown={chatInputOnKeyDown}></input>
+              <button className="btn btn-base-100 ml-2" ref={chatEnterRef} onClick={handleBtnPress}>send</button>
             </div>
         </div>
     )
