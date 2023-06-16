@@ -9,7 +9,7 @@ import IconHome from './assets/IconHome'
 import ErrorPage from './Pages/ErrorPage'
 import MatchHistory from './Components/MatchHistory/MatchHistory'
 
-const themes = ['Spies', 'dracula', 'cyberpunk', 'business', 'coffee', 'pastel', 'luxury', 'lofi', 'emerald']
+const themes = ['Spies', 'dracula', 'cyberpunk', 'business', 'coffee', 'pastel', 'luxury', 'emerald']
 function App() {
 
   const socket = useContext(SocketContext);

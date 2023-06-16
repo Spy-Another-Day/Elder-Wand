@@ -30,7 +30,6 @@ export const daisyui = {
     "coffee",
     'pastel',
     'luxury',
-    'lofi',
     'emerald'
   ]
 };
