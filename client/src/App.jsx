@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import { SocketContext } from './socket.js';
 import './App.css'
 import { UserButton } from '@clerk/clerk-react';
-
+import { GameStateContext } from "./Components/Context.js";
 import LandingPage from './Pages/LandingPage'
 import RoomPage from './Pages/RoomPage'
 import IconHome from './assets/IconHome'
@@ -13,18 +13,15 @@ import MatchHistory from './Components/MatchHistory/MatchHistory'
 const themes = ['Spies', 'dark', 'light', 'retro', 'dracula', 'aqua', 'cyberpunk', 'business', 'Stigander', 'Zaris']
 function App() {
 
-
+  const gameState = useContext(GameStateContext)
   const socket = useContext(SocketContext);
   // console.log(socket)
   const [theme, setTheme] = useState('Spies')
 
-  socket.on('test123', (msg) => {
-    console.log(msg)
-  })
 
   return (
     <SocketContext.Provider value={socket}>
-      <div data-theme={localStorage.getItem('theme') || theme} className='bg-primary h-screen w-screen overflow-clip'>
+      <div data-theme={localStorage.getItem('theme') || theme} className='dog h-screen w-screen overflow-scroll'>
 
         {/* NavBar */}
         <div className="navbar max-w-full bg-base-100">
@@ -43,11 +40,11 @@ function App() {
           <div className="flex-none">
             <UserButton showName='true' />
             {/* dropdown theme menu */}
-            <div className="dropdown z-10">
+            <div className="dropdown dropdown-bottom  dropdown-end z-10 ">
               <label tabIndex={0} className="btn m-1 ml-5">themes</label>
-              <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <ul tabIndex={0} className="dropdown-content  menu p-2 shadow bg-secondary rounded-box w-52">
                 {themes.map((theme, index) => (
-                  <li onClick={(e) => { setTheme(e.target.innerText); localStorage.setItem('theme', e.target.innerText) }} key={index}><a>{theme}</a></li>
+                  <li className="text-neutral" onClick={(e) => { setTheme(e.target.innerText); localStorage.setItem('theme', e.target.innerText) }} key={index}><a>{theme}</a></li>
                 ))}
               </ul>
             </div>
@@ -170,7 +167,7 @@ export default App
 //     "Fight Club",
 //     "Forrest Gump",
 //     "The Shafather",
-//     "Star Wawshank Redemption",
+//     "Star Wars",
 //     "The Godrs",
 //     "The Dark Knight",
 //     "Back to the Future",

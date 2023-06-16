@@ -41,6 +41,7 @@ const historySchema = mongoose.Schema({
     require:true},
 
   teamWon: {type:String},
+  winner_score: {type:Number}
 
 
 }, { timestamps: true });

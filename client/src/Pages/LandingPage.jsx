@@ -57,11 +57,11 @@ const LandingPage = () => {
     <div className=" container h-auto max-w-6xl mx-auto mt-[15%] px-8">
 
       <div className="relative block md:flex items-center space-x-4 h-full">
-        <div className="w-full md:w-1/2 relative rounded shadow-lg overflow-hidden py-8">
+        <div className="w-full bg-primary md:w-1/2 relative rounded shadow-lg overflow-hidden py-8">
           <button className="btn btn-neutral" onClick={handleCreateRoom}>Create a new Room</button>
         </div>
 
-        <div className="flex flex-col w-full md:w-1/2 relative rounded shadow-lg overflow-hidden space-y-4 py-8">
+        <div className="flex bg-primary flex-col w-full md:w-1/2 relative rounded shadow-lg overflow-hidden space-y-4 py-8">
 
           <input onChange={handleChangeID}
             type="text" placeholder="Enter URL or Room ID" className="rounded m-auto px-4 py-2 w-full" />

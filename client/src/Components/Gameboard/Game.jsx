@@ -2,19 +2,16 @@ import react, {useEffect, useState, userRef, useContext} from 'react';
 import { SocketContext } from '../../socket.js';
 import { GameStateContext } from '../Context.js'
 import Cards from './Cards.jsx';
-import ClueView from '../Clue/ClueView.jsx';
-import GameInfo from '../GameInformation/GameInfo';
 import Chat from '../GameInformation/Chat.jsx'
-import GameLog from '../GameInformation/GameLog.jsx'
+import GameLog from '../GameInformation/GameLog.jsx';
+import ClueView from '../Clue/ClueView.jsx';
+import GameResult from '../GameResult.jsx';
 
 export default function Game(){
   const socket = useContext(SocketContext);
-  const [isSpymaster, setIsSpymaster] = useState(false)
-  const [isYourTurn, setIsYourTurn] = useState(true)
   const [cards, setCards] = useState([]);
   const gameState = useContext(GameStateContext);
   useEffect(()=>{
-    console.log(gameState.words)
     setCards(gameState.words)
   }, [gameState])
 
@@ -24,16 +21,22 @@ export default function Game(){
     return <progress/>
   } else {
     return (
-      <>
-        <GameInfo />
-        <div className="flex justify-evenly mt-2 h-[54%]">
+      <div className={`flex flex-col h-full ${gameState.currentTeam === 'team_1' ? 'bg-info' : 'bg-success'} cat `}>
+        <div className="flex  flex-row justify-evenly mt-2 h-min">
           <GameLog />
-          <div className="bg-primary flex flex-col items-center h-[10vh]">
-            {cards.map((row, i ) => <Cards key={i} row={row} isSpymaster={isSpymaster} isYourTurn={isYourTurn}/>)}
+
+          {gameState.stage === 'play' && (
+          <div className="bg-primary flex flex-col items-center h-min">
+            {cards.map((row, i ) => <Cards key={i} rowIndex={i} row={row}/>)}
           </div>
+          )}
+
+          {gameState.stage === 'result' && (<GameResult result={gameState.teamWon}/>) }
           <Chat />
         </div>
-      </>
+        
+        {gameState.stage === 'play' && ( <ClueView />)}
+      </div>
     )
   }
 }

@@ -2,11 +2,12 @@ import {useState, useContext, useEffect, useRef} from 'react';
 import { SocketContext } from '../../socket.js';
 import { useParams } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
+import { GameStateContext } from '../Context.js';
 
 
 const Chat = () => {
 
-
+  const gameState = useContext( GameStateContext)
   const [messages, setMessages] = useState([])
   const [clientId, setClientId] = useState('')
   const chatEnterRef = useRef(null);
@@ -19,6 +20,7 @@ const Chat = () => {
   const socket = useContext(SocketContext)
 
   useEffect(() => {
+    socket.emit('getlogs', params.roomID)
     const outerHeight = outerRef.current.clientHeight;
     const innerHeight = innerRef.current.clientHeight;
 
@@ -31,10 +33,6 @@ const Chat = () => {
   useEffect(() => {
     const outerHeight = outerRef.current.clientHeight;
     const innerHeight = innerRef.current.clientHeight;
-
-    console.log("outer height: ", outerHeight)
-    console.log("inner height: ", innerHeight)
-
     outerRef.current.scrollTo({
       top: innerHeight - outerHeight + 18,
       left: 0,
@@ -48,7 +46,6 @@ const Chat = () => {
   useEffect(()=>{
 
     const handleMessages = (msgArr) => {
-      // console.log(msg)
       setMessages(msgArr)
     }
 
@@ -63,23 +60,24 @@ const Chat = () => {
     return () => {
       socket.off('message', handleMessages)
       socket.off('id', handleId)
-      // socket.off('id', handleId)  <-- This prevents it from creating two event listeners and console logging twice, however I lose track of the userId as well... will need to find a fix
     }
 
   }, [socket])
+  const { isLoaded, isSignedIn, user } = useUser();
 
   const handleBtnPress = (e) => {
     e.preventDefault();
-    var input = document.getElementById('chat-input')
+    let username = user.username;
+    let input = document.getElementById('chat-input')
     if (input.value) {
-      var messageInfo = {
+      let messageInfo = {
         clientId: socket.id,
         message: input.value,
-        roomId: params.roomID
+        roomId: params.roomID,
+				"user": username
       }
       socket.emit('sendMessage', messageInfo);
       input.value = "";
-      console.log(clientId)
       window.scrollTo(0, document.body.scrollHeight);
     }
   }
@@ -91,27 +89,25 @@ const Chat = () => {
     }
   }
 
-  const { isLoaded, isSignedIn, user } = useUser();
-
   if (isLoaded && isSignedIn) {
     return (
-      <div className="w-1/5 flex-col h-12/12 -mt-2 z-0">
-        <div className="w-12/12 flex justify-center my-3" style={{minHeight: "100%",maxHeight: "45vh"}}>
-          <div id="chat" ref={outerRef} className="bg-secondary min-w-full rounded-md pb-1 overflow-y-scroll">
-            <ul ref={innerRef}>
-              {messages.map((msg, index) => {
-                return (
-                  <div className="w-12/12 p-1 bg-gray-50 rounded-md mt-1 ml-1 mr-1 text-left" key={index}>{user.username}: {msg}</div>
-                )
-              })}
-            </ul>
+        <div className="w-1/5 flex-col  h-full -mt-2 z-0">
+          <div className="w-12/12 flex justify-center my-3 min-h-full max-h-[45vh]">
+            <div id="chat" ref={outerRef} className="bg-secondary min-w-full rounded-md pb-1 overflow-y-scroll">
+              <ul ref={innerRef}>
+                {messages.map((msg, index) => {
+                  return (
+                    <div className="w-12/12 p-1 text-neutral bg-gray-50 rounded-md mt-1 ml-1 mr-1 text-left" key={index}>{msg.user}: {msg.message}</div>
+                  )
+                })}
+              </ul>
+            </div>
           </div>
+            <div className=''>
+              <input id="chat-input" autoComplete="off" type="text" placeholder="Enter chat" className="rounded m-auto px-4 py-2 w-12/12" onKeyDown={chatInputOnKeyDown}></input>
+              <button className="btn btn-neutral ml-2" ref={chatEnterRef} onClick={handleBtnPress}>send</button>
+            </div>
         </div>
-          <div>
-            <input id="chat-input" autoComplete="off" type="text" placeholder="Enter chat" className="rounded m-auto px-4 py-2 w-12/12" onKeyDown={chatInputOnKeyDown}></input>
-            <button className="btn btn-neutral ml-2" ref={chatEnterRef} onClick={handleBtnPress}>send</button>
-          </div>
-      </div>
     )
   } else {
     return <div>Loading...</div>

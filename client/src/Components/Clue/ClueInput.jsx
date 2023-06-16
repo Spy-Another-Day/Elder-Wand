@@ -4,6 +4,7 @@ const ClueInput = ({ submitClue }) => {
   const [clueInput, setClueInput] = useState('');
   const [clueNumberInput, setClueNumberInput] = useState('');
   const [alertMessage, setAlertMessage] = useState({show: false, text: ''});
+  const [editing, setEditing] = useState(true);
 
   const shareHandler = () => {
     if (clueInput === '') {
@@ -12,6 +13,7 @@ const ClueInput = ({ submitClue }) => {
       setAlertMessage({show: true, text: 'Enter a valid number of cards (0 - 9, or unlimited) before sharing.'})
     } else {
       submitClue(clueInput, clueNumberInput);
+      setEditing(false);
     }
   }
 
@@ -31,7 +33,7 @@ const ClueInput = ({ submitClue }) => {
         placeholder='# of cards?'
         className='input input-bordered w-40 max-w-xs'
       />
-      <input type='button' value='Share' onClick={shareHandler} className='btn'/>
+      <input type='button' value='Share' onClick={editing ? shareHandler : () => {}} className='btn'/>
       {alertMessage.show &&
       <div className="badge badge-error gap-2 m-auto">
         <svg className="w-4 h-4 stroke-current hover:border"
