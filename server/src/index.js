@@ -45,19 +45,30 @@ io.on("connection", (socket) => {
     redisClient.get(chat)
       .then((result)=>{
         if (result === null) {
-          var chatLog = []
-          chatLog.push(data.message)
+          var temp = {};
+          temp['message'] = data.message
+          temp['user'] = data.user
+          chatLog = [temp]
           redisClient.set(chat, JSON.stringify(chatLog))
           io.to(data.roomId.toString()).emit('message', chatLog)
         } else {
           var chatLog = JSON.parse(result)
-          chatLog.push(data.message)
+          var temp = {};
+          temp['message'] = data.message
+          temp['user'] = data.user
+          chatLog.push(temp)
           redisClient.set(chat, JSON.stringify(chatLog))
           io.to(data.roomId.toString()).emit('message', chatLog)
         }
     })
   })
 
+  socket.on('resetVote', (roomID) => {
+    
+    io.to(roomID).emit('resetVote');
+
+    }
+  )
 
   socket.on("initRoom", (data) => {
     socket.join(data.roomID);
@@ -69,10 +80,21 @@ io.on("connection", (socket) => {
         wordsRoutes
           .initGameState(data)
           .then((gameState) => {
+            gameState.stage = 'init';
             gameState.connection = {};
             gameState.connection[socket.id] = socket.id;
             gameState.roomID = data.roomID;
             gameState.host = socket.id;
+            gameState.team_1 = data.team_1 || 'team_1';
+            gameState.team_2 = data.team_2 || 'team_2';
+            gameState.team_1_score = 0;
+            gameState.team_2_score = 0;
+            gameState.winner_score = 0;
+            gameState.score = 1;
+            gameState.teamWon = '';
+            gameState.winReason = '';
+            gameState.clue = 'waiting on clue...'
+            gameState.remainingGuesses = 0;
             gameState.players[data.userID] = data.user;
             redisClient.set(data.roomID, JSON.stringify(gameState));
             io.to(data.roomID).emit("gameState", gameState);
@@ -99,13 +121,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on('updateTeam', (roomID, teamInfo) => {
-    // console.log('updateTeam: ', teamInfo)
 
     // retrieve game state from Redis database
     redisClient.get(roomID)
       .then(gameState => {
         gameState = JSON.parse(gameState);
-        // console.log('Before update: ', gameState);
 
         // update team members
         const teamObj = gameState[`team_${teamInfo.team}_members`] || {};
@@ -118,7 +138,26 @@ io.on("connection", (socket) => {
           spymaster[1] = teamInfo.user;
         }
 
-        // console.log('after update: ', gameState);
+        // update database
+        redisClient.set(roomID, JSON.stringify(gameState));
+
+        // send updated gameState back to clients
+        io.to(roomID).emit("gameState", gameState);
+      })
+
+  })
+
+  socket.on('updateStage', (roomID, nextStage) => {
+
+    // retrieve game state from Redis database
+    redisClient.get(roomID)
+      .then(gameState => {
+        gameState = JSON.parse(gameState);
+
+        // update game stage
+        // ['init', 'play', 'result']
+        gameState.stage = nextStage;
+
         // update database
         redisClient.set(roomID, JSON.stringify(gameState));
 
@@ -150,6 +189,30 @@ io.on("connection", (socket) => {
 
   })
 
+  socket.on('getlogs', (data)=> {
+    var gameLog = data + "gameLog"
+    var chatLog = data + 'chatLog'
+    redisClient.get(gameLog)
+    .then(result => {
+      let temp = result || '[]';
+      socket.emit('gameLog', JSON.parse(temp))
+    })
+    .catch(err => console.log(err))
+
+    redisClient.get(chatLog)
+    .then(result => {
+      let temp = result || '[]';
+      socket.emit('message', JSON.parse(temp))
+    })
+    .catch(err => console.log(err))
+  })
+
+  
+  socket.on('gameState', data => {
+    redisClient.set(data.roomID, JSON.stringify(data));
+    io.to(data.roomID).emit('gameState', data);
+  })
+
   socket.on("disconnect", (data) => {
     console.log(socket.id, "left");
     if(currentRoomId !== undefined) {
@@ -161,7 +224,6 @@ io.on("connection", (socket) => {
         if (socket.id === gameState.host) {
           gameState.host = undefined
           for(var i in gameState.connection) {
-            console.log({i})
             gameState.host = i;
             redisClient.set(currentRoomId, JSON.stringify(gameState))
             io.to(gameState.roomID).emit('gameState', gameState)
@@ -200,9 +262,8 @@ io.on("connection", (socket) => {
     io.to(roomID).emit('selectedCard', data.word, username);
   })
 
-  socket.on("disconnect", (data) => {
-    console.log(socket.id, "left");
-  });
+  // socket.on("disconnect", (data) => {
+  // });
 
 
 });

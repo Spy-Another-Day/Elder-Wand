@@ -3,7 +3,7 @@ import react, {useEffect, useState, userRef, useContext} from 'react';
 export default function Record({record}) {
 
 
-  const {team_1_guessed, team_2_guessed, team_1_members, team_2_members, team_1_spymaster, team_2_spymaster, words, roomID, startUpTeam, teamWon, topic, createdAt, _id, team_1, team_2, team_1_score, team_2_score, winReason} = record;
+  const {team_1_guessed, team_2_guessed, team_1_members, team_2_members, team_1_spymaster, team_2_spymaster, words, roomID, startUpTeam, teamWon, topic, createdAt, _id, team_1, team_2, team_1_score, team_2_score, winReason, winner_score} = record;
 
 
 return(<>
@@ -19,7 +19,7 @@ return(<>
       {/* Navbar */}
       <div className="w-full navbar bg-base-300">
 
-        <div className="flex-1 px-2 mx-2">{teamWon}: {team_1 === teamWon ? team_1_guessed : team_2_guessed}</div>
+        <div className="flex-1 px-2 mx-2">{teamWon}: {winner_score}</div>
         <div className="flex-none hidden lg:block">
           <ul className="menu menu-horizontal">
             {/* Navbar menu content here */}
@@ -103,7 +103,6 @@ return(<>
         {row.map((card) => {
           return (
             <div
-              onClick={(event) => {console.log(event.target.innerText, 'was clicked')}}
               className={`btn m-1 w-40 h-24 ${
                 card.belongsTo === 'assassin'
                 ? 'btn-secondary'

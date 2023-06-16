@@ -16,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.12.1",
     "socket.io-client": "^4.6.2",
+    "tailwind-heropatterns": "^0.0.8",
     "uuid4": "^2.0.3"
   },
   "devDependencies": {

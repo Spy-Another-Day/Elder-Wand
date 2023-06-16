@@ -4,7 +4,7 @@ import { useUser } from "@clerk/clerk-react";
 import { GameStateContext } from '../Components/Context.js'
 import IconClose from '../assets/IconClose'
 
-const GameSetup = ({ nextStage }) => {
+const GameSetup = () => {
   const { user } = useUser();
   const socket = useContext(SocketContext);
   const gameState = useContext(GameStateContext);
@@ -68,6 +68,27 @@ const GameSetup = ({ nextStage }) => {
     return Object.values(gameState.players)?.length;
   }
 
+  const readyToStart = () => {
+    // each team should have a spymaster
+    if (gameState.team_1_spymaster?.length === 0
+      || gameState.team_2_spymaster?.length === 0) {
+      return false;
+    }
+
+    // each team should have at least two players
+    if (gameState.team_1_members?.length < 2
+      || gameState.team_2_members?.length < 2 ) {
+      return false;
+    }
+
+    // all players are ready
+    if (undecidedPlayers.length > 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   const updateTeamMember = (role) => {
     setModal(false);
     const info = { ...teamInfo, ["role"]: role };
@@ -75,11 +96,15 @@ const GameSetup = ({ nextStage }) => {
     socket.emit('updateTeam', gameState.roomID, info)
   }
 
+  const nextStage = (nextStage) => {
+    socket.emit('updateStage', gameState.roomID, nextStage)
+  }
+
   if (!gameState) {
     return (<div>Loading...</div>);
   }
 
-  // console.log('gameState in GameSetup:', gameState)
+  //  ('gameState in GameSetup:', gameState)
 
   return (
     <div className="container flex flex-col h-[60%] max-w-6xl mx-auto my-12 px-8">
@@ -87,8 +112,8 @@ const GameSetup = ({ nextStage }) => {
 
         {/* TEAM 1 */}
         <div onClick={() => handleClickTeam(1)}
-          className="relative w-full h-full md:w-1/2 rounded bg-neutral
-        shadow-lg overflow-hidden py-8">
+          className="relative w-full h-full md:w-1/2 rounded-3xl bg-neutral
+        shadow-lg overflow-hidden py-8 cursor-pointer hover:bg-red-500 ">
           <div><h1>Red Team</h1></div>
           <br />
           <div className={`${modal ? "hidden" : ""} flex flex-row`}>
@@ -109,7 +134,7 @@ const GameSetup = ({ nextStage }) => {
             </div>
           </div>
 
-          {/* Choose role */}
+          {/* Choose role Modal*/}
           <div className={`fixed z-10 ${modal ? "" : "hidden"}
           top-0 left-0 right-0 backdrop-blur-lg backdrop-grayscale
           p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
@@ -125,20 +150,20 @@ const GameSetup = ({ nextStage }) => {
                 {/* Modal content */}
                 {teamInfo.team === 1 && gameState.team_1_spymaster?.length === 0 && (
                   <div onClick={() => updateTeamMember("spymaster")}
-                    className="w-1/2 bg-primary flex justify-center items-center m-16 p-16">
+                    className="w-1/2 bg-primary flex justify-center text-neutral rounded-3xl items-center m-16 p-16">
                     <h3>I want to be a Spy Master</h3>
                   </div>
                 )}
 
                 {teamInfo.team === 2 && gameState.team_2_spymaster?.length === 0 && (
                   <div onClick={() => updateTeamMember("spymaster")}
-                    className="w-1/2 bg-primary flex justify-center items-center m-16 p-16">
+                    className="w-1/2 bg-primary flex justify-center text-neutral rounded-3xl  items-center m-16 p-16">
                     <h3>I want to be a Spy Master</h3>
                   </div>
                 )}
 
                 <div onClick={() => updateTeamMember("agent")}
-                  className="w-1/2 bg-primary flex justify-center items-center m-16 p-16">
+                  className="w-1/2 bg-primary flex justify-center text-neutral rounded-3xl items-center m-16 p-16">
                   <h3>I want to be a Field Operative</h3>
                 </div>
               </div>
@@ -150,11 +175,11 @@ const GameSetup = ({ nextStage }) => {
 
         {/* TEAM 2 */}
         <div onClick={() => handleClickTeam(2)}
-          className="relative w-full h-full md:w-1/2 rounded bg-neutral
-        shadow-lg overflow-hidden py-8">
+          className={`relative w-full h-full md:w-1/2 rounded-3xl bg-neutral
+        shadow-lg overflow-hidden py-8 hover:bg-blue-500 cursor-pointer`}>
           <div><h1>Blue Team</h1></div>
           <br />
-          <div className={`${modal ? "hidden" : ""} flex flex-row`}>
+          <div className={`${modal ? "hidden" : ""} flex flex-row `}>
             <div className="w-1/2">
               <h3>Spymaster</h3>
               {gameState.team_2_spymaster?.[1]}
@@ -181,7 +206,7 @@ const GameSetup = ({ nextStage }) => {
 
           <br />
           {undecidedPlayers.length > 0 && (
-            <>
+            <div className="text-neutral bg-primary rounded-lg ">
               Undecided {undecidedPlayers.length} / {getTotalPlayers()}
               <br />
               waiting on
@@ -191,24 +216,24 @@ const GameSetup = ({ nextStage }) => {
                   <span key={player[0]}>{player[1]} </span>
                 )
               })}
-            </>
+            </div>
           )}
 
           {undecidedPlayers.length === 0 && (
-            <>
-              All players are ready...
-            </>
+            <div className="flex flex-col">
+              <p className="text-neutral bg-primary">All players are ready...</p>
+            </div>
           )}
 
 
         </div>
       </div>
 
-      <button onClick={() => nextStage("init")}>Start</button>
 
-      {/* {getTotalUndecided() === getTotalPlayers() && (
-        <button onClick={() => nextStage("init")}>Start</button>
-      )} */}
+      {readyToStart() && socket.id === gameState.host && (
+        <button onClick={() => nextStage("play")}>Start</button>
+      )}
+
 
     </div>
   );

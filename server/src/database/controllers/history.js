@@ -5,7 +5,9 @@ module.exports = {
 
   getHistory: (req, res) => {
     var limit = req.query.limit || 30;
-    History.find().sort({_id: -1}).limit(limit)
+    
+    
+    History.find().sort({winner_score: -1}).limit(limit)
     .then(result => {
       res.status(200).send(result)
     })

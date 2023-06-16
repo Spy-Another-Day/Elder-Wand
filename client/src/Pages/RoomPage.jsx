@@ -16,7 +16,7 @@ const RoomPage = () => {
   // component rendered also depends on the role of the player
   // ie. spymaster vs. operator
   // 3 possible stages: init, play, result
-  const [stage, setStage] = useState("init");
+  // const [stage, setStage] = useState("init");
   const [gameState, setGameState] = useState({});
 
   useEffect(() => {
@@ -25,32 +25,28 @@ const RoomPage = () => {
     temp.topic = topic;
     temp.user = user.username;
     temp.userID = user.id;
-    // console.log('Object sending to init room', temp)
     socket.emit("initRoom", temp);
   }, []);
 
   socket.on('gameState', data => {
-    // console.log(data)
     setGameState(data)
+    
   });
 
-  const nextStage = (currentStage) => {
-    const stages = ['init', 'play', 'result'];
-    const currentIndex = stages.indexOf(currentStage);
-    const nextIndex = (currentIndex+1) % 3;
-    setStage(stages[nextIndex]);
-  }
+  // const nextStage = (currentStage) => {
+  //   const stages = ['init', 'play', 'result'];
+  //   const currentIndex = stages.indexOf(currentStage);
+  //   const nextIndex = (currentIndex+1) % 3;
+  //   setStage(stages[nextIndex]);
+  // }
 
-  // console.log('gameState in RoomPage:', gameState)
 
 
   return (
     <GameStateContext.Provider value={gameState}>
-      {stage === 'init' && (
-         <GameSetup nextStage={nextStage} />
-      )}
-      {stage === 'play' && (<Gameboard />)}
-      {stage === 'result' && (<Gameboard />)}
+      {gameState.stage === 'init' && (<GameSetup />)}
+      {gameState.stage === 'play' && (<Gameboard />)}
+      {gameState.stage === 'result' && (<Gameboard />)}
     </GameStateContext.Provider>
   );
 };
