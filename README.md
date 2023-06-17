@@ -1,5 +1,85 @@
+# Spy Another Day
 
+Spy Another Day is an interactive online multiplayer game where players work together in teams to uncover hidden cards based on clues provided by their designated Spy Master. This README provides an overview of the game's features, instructions on how to play, and steps to install and deploy the game.
 
+## Features
+
+- Real-time chat and game interactions using Socket.IO.
+- Fast game log and game state updates using Redis.
+![Field Operative Screenshot](Readme_images/FieldOperative.png)
+
+- Stored game history in a MongoDB database, accessible through the leaderboard.
+![Leaderboard Screenshot](Readme_images/Leaderboard.png)
+- Responsive game board that updates dynamically based on the current turn and revealed cards.
+- Multiple themes available
+![Alt Theme Screenshot](Readme_images/AltTheme.png)
+
+## How to Play
+
+### Spy Master
+
+As a Spy Master, your goal is to guide your field operatives to uncover all the cards belonging to your team. Here's how you play:
+
+1. Study the cards that belong to your team when it's your team's turn.
+2. Think of a single word clue that can connect multiple cards.
+3. Give a number indicating how many cards the clue relates to.
+4. Communicate the clue and the number to your team.
+
+![Spy Master Screenshot](Readme_images/Spymaster.png)
+
+For example, you could say "books" as the clue with a count of 2. Your team might then select "The Great Gatsby" and "Pride and Prejudice" as the cards associated with the clue.
+
+### Field Operative
+
+As a Field Operative, your goal is to use the clues provided by the Spy Master to identify the cards belonging to your team. Here's how you play:
+
+1. Listen to the clue and the number given by the Spy Master.
+2. Click the word on a card to tell your team that you think this is a possible card.
+3. Use the lock icon in the top right corner of a card to lock in your selection.
+4. If the card is neutral, your turn ends.
+5. If the card belongs to the other team, it becomes their turn.
+6. If the card is the assassin card, the game ends.
+7. If the card belongs to your team, you can select another card.
+
+![Field Operative Screenshot](Readme_images/FieldOperative.png)
+
+## Installation
+
+Before starting the game, make sure you have the following prerequisites installed:
+
+- Redis: [Installation Guide](https://redis.io/docs/getting-started/installation/)
+- MongoDB: [Installation Guide](https://www.mongodb.com/docs/manual/installation/)
+- Clerk API Key: Obtain your ###publishable API key from [clerk.com](https://clerk.com)
+
+To deploy and host the game locally, follow these steps:
+
+1. Clone the repository to your computer.
+2. Change to the `client` directory: `cd client`
+3. Install the required dependencies: `npm install`
+4. Create a `.env` file in the root of the `client` directory with the following content:
+
+```javascript
+VITE_SERVER_URL="http://localhost:3000" # or your deployed IP/URL
+VITE_REACT_APP_CLERK_PUBLISHABLE_KEY="YOUR KEY GOES HERE"
+```
+5. Save the `.env` file.
+6. Build the client: `npm run build`
+7. Go back to the root of the repository: `cd ..`
+8. Change to the `server` directory: `cd server`
+9. Install the required dependencies: `npm install`
+10. Ensure that both Redis and MongoDB are running on your computer.
+11. Start the server: `npm run dev`
+
+The game should now be ready to play.
+
+## Get Started
+
+To start playing Spy Another Day, follow these steps:
+
+1. Create an account and verify your email.
+2. Create a room within
+
+![Team page Screenshot](Readme_images/Team.png)
 
 ## API Endpoints
 ### User Endpoints
