@@ -39,8 +39,8 @@ return(<>
 
   <div className="collapse-content">
 
-  <div className="flex flex-col w-full lg:flex-row bg-info">
-    <div className="grid flex-grow  card  rounded-box place-items-center bg-info">
+  <div className="flex flex-col w-full lg:flex-row bg-neutral">
+    <div className="grid flex-grow  card  rounded-box place-items-center text-base-100 bg-primary">
     <div>
       <h1>Team {team_1}</h1>
 
@@ -63,7 +63,7 @@ return(<>
       {/* head */}
       <thead>
         <tr>
-          <th>{team_1}'s Members</th>
+          <th className='text-base-100' >{team_1}'s Members</th>
         </tr>
       </thead>
       <tbody>
@@ -88,7 +88,7 @@ return(<>
 
     </div>
 
-    <div className="grid flex-grow  card bg-base-300 rounded-box place-items-center">
+    <div className="grid flex-grow  card bg-neutral rounded-box place-items-center">
     <div><a>Topic: {topic}</a></div>
       <div className="absolute inset-y-0 right-0 ">
       <a>room id: {roomID}</a>
@@ -99,19 +99,19 @@ return(<>
       <div className="bg-red-700 flex flex-col items-center ">
       {
         words.map(row => {
-        return (<div className="bg-blue-700 flex flex-row justify-center w-min">
+        return (<div className="bg-neutral flex flex-row justify-center w-min">
         {row.map((card) => {
           return (
             <div
               className={`btn m-1 w-40 h-24 ${
                 card.belongsTo === 'assassin'
-                ? 'btn-secondary'
-                : card.belongsTo === 'bystander'
                 ? 'btn-warning'
+                : card.belongsTo === 'bystander'
+                ? 'btn-accent'
                 : card.belongsTo === 'team_1'
-                ? 'btn-info'
+                ? 'btn-primary'
                 : card.belongsTo === 'team_2'
-                ? 'btn-success'
+                ? 'btn-secondary'
                 : 'btn-neutral'}
                 `}
             >
@@ -125,10 +125,10 @@ return(<>
         })
       }
       </div>
-      <h1>Win by: {winReason}</h1>
+      <h1 className='text-base-100'>Win by: {winReason}</h1>
     </div>
 
-    <div className="grid flex-grow  card  rounded-box place-items-center bg-success">
+    <div className="grid flex-grow card rounded-box place-items-center bg-secondary">
       <div>
         <h1>Team {team_2}</h1>
         <h2>{startUpTeam === team_2 ? '(Start up team)': ''}</h2>
