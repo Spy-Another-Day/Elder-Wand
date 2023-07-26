@@ -373,6 +373,6 @@ app.post("/history", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-server.listen(`0.0.0.0:${PORT}`, () =>
+server.listen(port, "0.0.0.0", () =>
   console.log(`Now running on port:${PORT}`)
 );
