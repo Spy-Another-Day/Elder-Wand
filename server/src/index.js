@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on('resetVote', (roomID) => {
-    
+
     io.to(roomID).emit('resetVote');
 
     }
@@ -215,7 +215,7 @@ io.on("connection", (socket) => {
     .catch(err => console.log(err))
   })
 
-  
+
   socket.on('gameState', data => {
     redisClient.set(data.roomID, JSON.stringify(data), {EX: 60*60*24});
     io.to(data.roomID).emit('gameState', data);
@@ -373,6 +373,6 @@ app.post("/history", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-server.listen(PORT, () =>
-  console.log(`Now running on http://localhost:${PORT}`)
+server.listen(`0.0.0.0:${PORT}`, () =>
+  console.log(`Now running on port:${PORT}`)
 );
