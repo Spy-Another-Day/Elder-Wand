@@ -286,7 +286,9 @@ io.on("connection", (socket) => {
 
 // middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'https://spy-another-day.up.railway.app'
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(logger(":method :url :status - :response-time ms"));
 
