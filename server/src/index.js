@@ -1,7 +1,6 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const Path = require('path')
 const http = require("http");
 const { Server, Socket } = require("socket.io");
@@ -9,8 +8,19 @@ const usersRoutes = require("./database/controllers/users.js");
 const wordsRoutes = require("./database/controllers/words.js");
 const groupsRoutes = require("./database/controllers/groups.js");
 const historyRoutes = require("./database/controllers/history.js");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
 const redis = require("redis");
-const redisClient = redis.createClient(6379);
+const redisClient = redis.createClient({
+  socket: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: process.env.REDIS_PORT || 6379
+  },
+  username: process.env.REDIS_USER || '',
+  password: process.env.REDIS_PASSWORD || ''
+});
 redisClient.connect();
 
 const app = express();
@@ -26,8 +36,6 @@ const io = new Server(server, { cors: { origin: "*" } });
 //   socket.data.username = username;
 //   next();
 // });
-
-dotenv.config();
 
 io.on("connection", (socket) => {
   var currentRoomId;
