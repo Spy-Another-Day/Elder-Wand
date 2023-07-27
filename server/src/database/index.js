@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/elderWand');
+const DB_URL = process.env.DB_URL || 'mongodb://localhost/elderWand'
+
+mongoose.connect(DB_URL);
 const db = mongoose.connection;
 db.on('error', () => {
     console.log('mongoose connection error');
