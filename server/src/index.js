@@ -3,14 +3,15 @@ const logger = require("morgan");
 const cors = require("cors");
 const Path = require('path')
 const http = require("http");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
 const { Server, Socket } = require("socket.io");
 const usersRoutes = require("./database/controllers/users.js");
 const wordsRoutes = require("./database/controllers/words.js");
 const groupsRoutes = require("./database/controllers/groups.js");
 const historyRoutes = require("./database/controllers/history.js");
-
-const dotenv = require("dotenv");
-dotenv.config();
 
 const redis = require("redis");
 const redisClient = redis.createClient({
@@ -292,7 +293,7 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(logger(":method :url :status - :response-time ms"));
 
-app.use(express.static(Path.join(__dirname, '../public')))
+// app.use(express.static(Path.join(__dirname, '../public')))
 
 // app.get("/", (req, res) => {
 //   res.sendFile(Path.join(__dirname, '../public', 'index.html'))
