@@ -293,19 +293,19 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(logger(":method :url :status - :response-time ms"));
 
-// app.use(express.static(Path.join(__dirname, '../public')))
+app.use(express.static(Path.join(__dirname, '../public')))
 
-// app.get("/", (req, res) => {
-//   res.sendFile(Path.join(__dirname, '../public', 'index.html'))
-// });
+app.get("/", (req, res) => {
+  res.sendFile(Path.join(__dirname, '../public', 'index.html'))
+});
 
-// app.get('/leaderboard', (req, res) => {
-//   res.sendFile(Path.join(__dirname, '../public', 'index.html'))
-// })
+app.get('/leaderboard', (req, res) => {
+  res.sendFile(Path.join(__dirname, '../public', 'index.html'))
+})
 
-// app.get('/room/:id', (req, res) => {
-//   res.sendFile(Path.join(__dirname, '../public', 'index.html'))
-// })
+app.get('/room/:id', (req, res) => {
+  res.sendFile(Path.join(__dirname, '../public', 'index.html'))
+})
 
 app.get("/user/:username", (req, res) => {
   usersRoutes.getUser(req, res);
