@@ -288,7 +288,7 @@ io.on("connection", (socket) => {
 // middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['https://spy-another-day.up.railway.app', 'http://localhost:*']
+  origin: ['https://*.railway.app', 'http://localhost:*']
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(logger(":method :url :status - :response-time ms"));
